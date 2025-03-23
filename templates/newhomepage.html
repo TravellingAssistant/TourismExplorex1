@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+}
+
+header {
+    height: 700px;
+    width: 100%;
+    background-image: url('https://img.freepik.com/premium-photo/various-objects-black-background_1048944-20729463.jpg?w=740');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+}
+
+    header .navBar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 1.5rem;
+    }
+
+        .navBar .logo {
+            text-decoration: none;
+            margin-top: 1rem;
+            font-size: 2rem;
+            color: #EFEFEF;
+        }
+
+        .navBar ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 3rem;
+            margin-top: 1rem;
+        }
+
+            .navBar ul li { list-style-type: none; padding: 0 1.5rem; }
+
+                .navBar ul li a {
+                    position: relative;
+                    text-decoration: none;
+                    color: #EFEFEF;
+                    font-size: 1.25rem;
+                }
+
+                    .navBar ul li a::after {
+                        content: '';
+                        position: absolute;
+                        width: 0;
+                        height: 3px;
+                        left: 0;
+                        top: 30px;
+                        background-color: #F8C308;
+                        transition: all .25s ease;
+                        -webkit-transition: all .25s ease;
+                        -moz-transition: all .25s ease;
+                        -ms-transition: all .25s ease;
+                        -o-transition: all .25s ease;
+                    }
+
+                        .navBar ul li a:hover::after { width: 100%; }
+
+.header-section {
+    position: absolute;
+    text-align: center;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    -webkit-transform: translate(-50%, -60%);
+    -moz-transform: translate(-50%, -60%);
+    -ms-transform: translate(-50%, -60%);
+    -o-transform: translate(-50%, -60%);
+}
+
+    .header-section h1 { color: #EFEFEF; font-size: 3.4rem; margin-bottom: 1.5rem; }
+    .header-section h2 { color: #EFEFEF; font-size: 1.8rem; }
+
+.travel-box {
+    position: absolute;
+    left: 15%;
+    top: 75%;
+    width: 900px;
+    height: 130px;
+    padding: 15px;
+    background: rgba(255, 255, 255, .5);
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+}
+
+    .travel-box i { cursor: pointer; }
+    .travel-box .trips-p p { font-size: 20px; font-weight: 700; }
+    .travel-box .travel-plans { display: grid; grid-template-columns: repeat(3, 0.3fr); margin-top: 1rem; }
+
+        .travel-plans .location .loc-box,
+        .travel-box .dates .date-box {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            width: 200px;
+            height: 40px;
+            background: #D9D9D9;
+            border-radius: 6px;
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            -ms-border-radius: 6px;
+            -o-border-radius: 6px;
+        }
+
+        .travel-box .btn {
+            position: absolute;
+            width: 120px;
+            height: 30px;
+            background: #F8C308;
+            color: #000000;
+            right: 1rem;
+            bottom: 1.2rem;
+            border-radius: 6px;
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            -ms-border-radius: 6px;
+            -o-border-radius: 6px;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all .3s ease;
+            -webkit-transition: all .3s ease;
+            -moz-transition: all .3s ease;
+            -ms-transition: all .3s ease;
+            -o-transition: all .3s ease;
+        }
+
+            .travel-box .btn:hover { background: #EEBA00; }
+
+.select {
+    position: relative;
+    display: flex;
+    width: 200px;
+    height: 40px;
+    line-height: 3;
+    overflow: hidden;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -o-border-radius: 6px;
+}
+
+    .select::after {
+        content: '\25BC';
+        position: absolute;
+        top: -10px;
+        right: 0;
+        padding: 6px;
+        background: #D9D9D9;
+        cursor: pointer;
+        pointer-events: none;
+        transition: all .25s ease;
+        -webkit-transition: all .25s ease;
+        -moz-transition: all .25s ease;
+        -ms-transition: all .25s ease;
+        -o-transition: all .25s ease;
+    }
+
+        .select:hover::after { color: #23B499; }
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    outline: none;
+    box-shadow: none;
+    border: none;
+    background: #D9D9D9;
+    background-image: none;
+    flex: 1;
+    padding: 0.5rem;
+    color: #000000;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+    select::-ms-expand { display: none; }
+
+.content { position: relative; margin-top: 4rem; }
+
+    .content .travel-plan {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+        .travel-plan h1 { font-size: 3rem; font-weight: 400; }
+        .travel-plan h2 { font-size: 2rem; margin-top: 1.5rem; font-weight: 400; }   
+
+.city {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+    .city .city-box { 
+        background: #D9D9D9;
+        width: 350px;
+        height: 400px;
+        border-radius: 12px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        -ms-border-radius: 12px;
+        -o-border-radius: 12px;
+        box-shadow: 0 12px 12px 0 rgba(0, 0, 0, .6);
+        transition: all .2s ease;
+        -webkit-transition: all .2s ease;
+        -moz-transition: all .2s ease;
+        -ms-transition: all .2s ease;
+        -o-transition: all .2s ease;
+    }
+
+        .city .city-box:hover {
+            transform: scale(1.05);
+            -webkit-transform: scale(1.05);
+            -moz-transform: scale(1.05);
+            -ms-transform: scale(1.05);
+            -o-transform: scale(1.05);
+        }
+
+            .city-box img { width: 100%; }
+
+        .city-content h4 { margin-top: 1rem; text-align: center; font-size: 1.2rem; }
+
+        .city-content .flex-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 2rem;
+        }
+
+            .flex-content .bottom { margin-top: 1.2rem; }
+            .flex-content h5 { font-weight: 400; font-size: .9rem; }
+
+.city-images { position: relative; display: grid; margin-top: 12rem; }
+
+    .city-images .top-box {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-left: auto;
+        margin-right: auto;
+        gap: 2rem;
+    }
+
+    .city-images .bottom-box {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-left: auto;
+        margin-right: auto;
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .city-images .box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .city-images .box h2 { color: #696969; font-weight: 400; }
+
+    .city-images img {
+        margin-top: 1rem;
+        cursor: pointer;
+        transition: all .2s ease;
+        -webkit-transition: all .2s ease;
+        -moz-transition: all .2s ease;
+        -ms-transition: all .2s ease;
+        -o-transition: all .2s ease;
+    }
+
+        .city-images img:hover {
+            transform: scale(1.05);
+            -webkit-transform: scale(1.05);
+            -moz-transform: scale(1.05);
+            -ms-transform: scale(1.05);
+            -o-transform: scale(1.05);
+        }
+
+.subscribe {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8rem;
+}
+
+    .subscribe form { display: flex; justify-content: center; align-items: center; }
+
+        .subscribe input[type="email"] {
+            width: 340px;
+            height: 50px;
+            border: none;
+            outline: none;
+            padding: 0 25px;
+            background: #E0E0C4;
+            border-radius: 25px 0 0 25px;
+            -webkit-border-radius: 25px 0 0 25px;
+            -moz-border-radius: 25px 0 0 25px;
+            -ms-border-radius: 25px 0 0 25px;
+            -o-border-radius: 25px 0 0 25px;
+        }
+
+        .subscribe input[type="submit"] {
+            position: relative;
+            width: 150px;
+            height: 50px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            background: #F8C308;
+            font-size: 1rem;
+            border-radius: 0 25px 25px 0;
+            -webkit-border-radius: 0 25px 25px 0;
+            -moz-border-radius: 0 25px 25px 0;
+            -ms-border-radius: 0 25px 25px 0;
+            -o-border-radius: 0 25px 25px 0;
+        }
+
+::placeholder {
+    color: #000000;
+    font-size: 1rem;
+    transition: opacity .3s ease;
+    -webkit-transition: opacity .3s ease;
+    -moz-transition: opacity .3s ease;
+    -ms-transition: opacity .3s ease;
+    -o-transition: opacity .3s ease;
+}
+
+    :focus::placeholder { opacity: .3; }
+
+.footer {
+    width: 100%;
+    height: 200px;
+    background: #202020;
+    position: relative;
+    margin-top: 1rem;
+}
+
+.footer-group { display: flex; justify-content: space-around; margin-top: 2rem; }
+    .footer-group h4 { font-size: 1rem; margin-top: 12px; color: #D9D9D9; }
+    .footer-group small { margin-top: 14px; margin-left: 0; cursor: pointer; color: #D9D9D9; }
+    .footer-group .social-media h4 { text-align: center; }
+    .social-media i {
+        margin-top: 2rem;
+        font-size: 1.5rem;
+        color: #D9D9D9;
+        cursor: pointer;
+        padding: 0 .25rem;
+    }
+
+    .social-media .fa-instagram, 
+    .social-media .fa-facebook,
+    .social-media .fa-x-twitter,
+    .social-media .fa-linkedin, 
+    .social-media .fa-youtube {
+        transition: color .2s ease;
+        -webkit-transition: color .2s ease;
+        -moz-transition: color .2s ease;
+        -ms-transition: color .2s ease;
+        -o-transition: color .2s ease;
+    }
+
+        .social-media .fa-instagram:hover {
+            color: #C13584;
+            transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            -moz-transform: scale(1.1);
+            -ms-transform: scale(1.1);
+            -o-transform: scale(1.1);
+        }
+
+        .social-media .fa-facebook:hover {
+            color: #4267B2;
+            transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            -moz-transform: scale(1.1);
+            -ms-transform: scale(1.1);
+            -o-transform: scale(1.1);
+        }
+
+        .social-media .fa-x-twitter:hover {
+            color: #1DA1F2;
+            transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            -moz-transform: scale(1.1);
+            -ms-transform: scale(1.1);
+            -o-transform: scale(1.1);
+        }
+
+        .social-media .fa-linkedin:hover {
+            color: #0077B5;
+            transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            -moz-transform: scale(1.1);
+            -ms-transform: scale(1.1);
+            -o-transform: scale(1.1);
+        }
+
+        .social-media .fa-youtube:hover {
+            color: #FF0000;
+            transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            -moz-transform: scale(1.1);
+            -ms-transform: scale(1.1);
+            -o-transform: scale(1.1);
+        }
+
+    .resources, .pricing, .company { display: flex; flex-direction: column; justify-content: center; }
+
+@media(max-width: 1100px) {
+    .navBar ul li { display: none; }
+
+    .header-section h1 { font-size: 2.6rem; }
+    .header-section h2 { font-size: 1.5rem; }
+
+    .content { margin-top: 20rem; }
+        .content .travel-plan h1 { font-size: 2.5rem; text-align: center; }
+        .content .travel-plan h2 { font-size: 1.6rem; text-align: center; margin-bottom: 2rem; }
+
+    .travel-box {
+        width: 300px;
+        height: 400px;
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -20%);
+        -webkit-transform: translate(-50%, -20%);
+        -moz-transform: translate(-50%, -20%);
+        -ms-transform: translate(-50%, -20%);
+        -o-transform: translate(-50%, -20%);
+        box-shadow: 0 25px 25px 0 rgba(0, 0, 0, .6);
+        background: rgba(255, 255, 255, .85);
+    }
+
+        .travel-box .travel-plans {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .travel-box .trips-p p { text-align: center; }
+
+        .travel-box .search {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr;
+            margin-top: 6rem;
+            margin-right: 3.5rem;
+        }
+
+    .city {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .city-images .top-box,
+    .city-images .bottom-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .subscribe input[type="email"]{ width: 240px; }
+    .subscribe input[type="submit"]{ width: 100px; }
+
+    .footer { height: 100%; }
+
+    .footer-group {
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 1rem;
+        gap: 2rem;
+    }
+
+        .footer-group small, .footer-group h4 { text-align: center; }
+}
+
+@media(max-width: 400px) {
+    .city .city-box { width: 300px; }
+
+    .subscribe input[type="email"]{ width: 200px; }
+}
+
+
+
+</style>
+<body>
+    <header>
+        <nav class="navBar">
+            <a href="#" class="logo">Tourism Explorex</a>
+            <ul>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal" style="margin-left: 20px;">Login</button>
+            </ul>
+        </nav>
+
+        <div class="header-section">
+            <h1>Welcome to Tourism Explorex</h1>
+            <h2>A platform for travel information and services</h2>
+        </div>
+
+        <!-- Modal for Login Form -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Login Form -->
+                <form action="/login" method="POST">  <!-- Added action to POST data to the /login route -->
+                    <div class="mb-3">
+                        <label for="loginEmail" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="loginEmail" name="email" placeholder="Enter email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <hr>
+                <!-- Login with Google Button -->
+                <a href="/login_with_google" class="btn btn-danger w-100">Login with Google</a>  <!-- Replace href with the correct Google OAuth route -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Register Form -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Register Form -->
+                <form action="/register" method="POST">  <!-- This sends POST request to the /register route -->
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter First Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter Last Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerEmail" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="registerEmail" name="email" placeholder="Enter email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="registerPassword" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <hr>
+                <!-- Register with Google Button -->
+                <a href="/login_with_google" class="btn btn-danger w-100">Register with Google</a>  <!-- Replace href with the correct Google OAuth route -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Toast Container -->
+<div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+</div>
+<div id="flash-messages" style="display: none;">
+    {{ get_flashed_messages(with_categories=true)|tojson }}
+</div>
+<script>
+// Show toast based on flash messages from Flask
+window.onload = function() {
+    // Get the flash messages from the hidden div
+    const messages = JSON.parse(document.getElementById('flash-messages').textContent);
+
+    // Function to create a toast
+    function showToast(message, type) {
+        const toastContainer = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.classList.add('toast', 'fade', 'show', 'align-items-center');
+
+        // Define different colors based on message type (success or error)
+        if (type === 'success') {
+            toast.classList.add('bg-success');
+        } else if (type === 'error') {
+            toast.classList.add('bg-danger');
+        }
+
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Automatically dismiss the toast after 5 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.classList.add('hide');
+        }, 5000);
+    }
+
+    // Loop through each flashed message and show the toast
+    if (messages && messages.length > 0) {
+        messages.forEach(message => {
+            const [category, text] = message; // category: success, error, etc.
+            showToast(text, category);
+        });
+    }
+};
+</script>
+
+
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+        </div>
+    </header>
+
+    <div class="content" >
+        <div class="travel-plan">
+            <h1>South India Top Travel picks</h1>
+            <h2>Plan an ideal, optimized itinerary for a perfect vacation.</h2>
+        </div>
+
+        <div class="city" >
+            <div class="city-box" style="margin-top: 20px;">
+                <div class="img">
+                    <img src="https://res.cloudinary.com/dnklrtoxl/image/upload/v1741601461/The-Ancient-Stone-Sculptures-Of-Mahabalipuram-Hashtag-Magazine_hgtodp.webp" alt="Norway image">
+                </div>
+            
+
+                <div class="city-content">
+                    <h4>Mahabalipuram</h4>
+                    <div class="flex-content">
+                        <div class="content1">
+                            <div class="top">
+                                <h5>Tour State</h5>
+                                <h5>Tamilnadu</h5>
+                            </div>
+                        </div>
+
+                        <div class="content2">
+                            <div class="top">
+                                <h5>Language</h5>
+                                <h5>Tamil</h5>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="city-box" style="margin-top: 20px;">
+                <div class="img">
+                    <img src="https://res.cloudinary.com/dnklrtoxl/image/upload/v1741601497/istockphoto-1343698772-612x612_m3vdvh.jpg" alt="Norway image">
+                </div>
+            
+
+                <div class="city-content">
+                    <h4>Hampi</h4>
+                    <div class="flex-content">
+                        <div class="content1">
+                            <div class="top">
+                                <h5>Tour State</h5>
+                                <h5>Karnataka</h5>
+                            </div>
+                        </div>
+
+                        <div class="content2">
+                            <div class="top">
+                                <h5>Language</h5>
+                                <h5>Kannada</h5>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="city-box" style="margin-top: 20px;">
+                <div class="img">
+                    <img src="https://res.cloudinary.com/dnklrtoxl/image/upload/v1741601479/thanjavur-palace-thanjavur-tamil-nadu-tri-hero_gdz69z.jpg" alt="Norway image">
+                </div>
+            
+
+                <div class="city-content">
+                    <h4>Thanjavur</h4>
+                    <div class="flex-content">
+                        <div class="content1">
+                            <div class="top">
+                                <h5>Tour State</h5>
+                                <h5>Tamilnadu</h5>
+                            </div>
+                        </div>
+
+                        <div class="content2">
+                            <div class="top">
+                                <h5>Language</h5>
+                                <h5>Tamil</h5>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            </div>
+           
+        </div>
+
+        <footer class="footer">
+            <div class="footer-group">
+                <div class="social-media">
+                    <h4>Social Media</h4>
+                    <div class="social-icon">
+                        <span><i class="fa-brands fa-instagram"></i></span>
+                        <span><i class="fa-brands fa-facebook"></i></span>
+                        <span><i class="fa-brands fa-x-twitter"></i></span>
+                        <span><i class="fa-brands fa-linkedin"></i></span>
+                        <span><i class="fa-brands fa-youtube"></i></span>
+                    </div>
+                </div>
+
+                <div class="resources">
+                    <h4>Resources</h4>
+                    <small>Applications</small>
+                    <small>Documentation</small>
+                    <small>Systems</small>
+                    <small>FAQ</small>
+                </div>
+
+                <div class="pricing">
+                    <h4>Pricing</h4>
+                    <small>Overview</small>
+                    <small>Premium Plans</small>
+                    <small>Affiliate Programs</small>
+                    <small>Promotions</small>
+                </div>
+
+                <div class="company">
+                    <h4>Company</h4>
+                    <small>About us</small>
+                    <small>Blog</small>
+                    <small>Partnership</small>
+                    <small>Careers</small>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

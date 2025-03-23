@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .search-box {
+
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .search-box input {
+		box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+            width: 75%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid blue;
+            border-radius: 5px;
+        }
+
+        .search-box button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background-color: #0056b3;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+       
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .col-md-4 {
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .shbtn {
+            width: 25%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .username {
+            font-size: 18px;
+
+        }
+
+        .header .logout-btn {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header .logout-btn:hover {
+            background-color: #c82333;
+        }
+
+        .header .package {
+            background-color: #fca400;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+
+        footer {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        #map {
+            height: 250px;
+            width: 100%;
+            margin-top: 0px;
+            display: none;
+            z-index: 0;
+            position: relative;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-btn {
+            position: fixed;
+            bottom: 70px;
+            right: 5px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .chatbox {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            width: 300px;
+            max-height: 80%;
+            height: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+            padding: 10px;
+            overflow-y: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chatbox-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .chatbox-body {
+            overflow-y: auto;
+            height: 80%;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .chatbox-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .chatbox-footer input {
+            width: 80%;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .chatbox-footer button {
+            width: 15%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chatbox-footer button:hover {
+            background-color: #0056b3;
+        }
+		
+		.loader {
+    position: absolute;
+    margin-top: 5px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    color: #333;
+}
+
+.loader::after {
+    content: '...';
+    animation: ellipsis 1s infinite;
+}
+
+@keyframes ellipsis {
+    0% {
+        content: '...';
+    }
+    33% {
+        content: '..';
+    }
+    66% {
+        content: '.';
+    }
+    100% {
+        content: '...';
+    }
+}
+/* General container for the itinerary */
+#itinerary-container {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+}
+
+/* Loader styles */
+.loader {
+    text-align: center;
+    font-size: 24px;
+    color: #007bff;
+    font-weight: bold;
+    margin: 50px 0;
+}
+
+/* Style for each attraction */
+.attraction {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Image container for attraction */
+.image-container {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.image-container img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Attraction header */
+.attraction-header h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+
+
+
+
+ /* Chatbot Container */
+        .chat-container {
+            width: 100%;
+            height: 500px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-in-out;
+			padding-left:100px;
+			padding-right:100px;
+			margin-top:10px;
+        }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Header (optional title or logo) */
+        .chat-header {
+            background: linear-gradient(145deg, #6f73d2, #a5a3fa);
+            padding: 15px;
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 2px solid #fff;
+			border-radius:30px;
+        }
+
+        /* Chatbox Display */
+        .chat-box {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: smokewhite;
+            border-bottom: 2px solid #eee;
+        }
+
+        /* Input and Send Button Container */
+        .input-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-top: 2px solid #eee;
+            background: white;
+        }
+
+        /* Input Field */
+        .chat-input {
+            width: calc(100% - 60px); /* Make space for the button */
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: #6f73d2;
+        }
+
+        /* Send Button */
+        .send-button {
+            background-color: #6f73d2;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .send-button:hover {
+            background-color: #5c63b6;
+        }
+
+        /* Message Styles */
+        .message {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 20px;
+            max-width: 75%;
+            word-wrap: break-word;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* User Message */
+        .user-message {
+            background-color: #6f73d2;
+            color: white;
+            margin-left: auto;
+            border-radius: 20px 20px 0 20px;
+        }
+
+        /* Bot Message */
+        .bot-message {
+            background-color: #e0e0e0;
+            color: #333;
+            border-radius: 20px 20px 20px 0;
+        }
+
+        /* Avatar Styling */
+        .message .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            font-style: italic;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* Scrollbar styles */
+        .chat-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-box::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 5px;
+        }
+
+        /* Message Slide-in Animation */
+        @keyframes slideIn {
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="header">
+    <div class="username">
+        Welcome, User! {{name}}
+    </div>
+    <h2 class="text-cehealthter">{{place_name}}</h2>
+    <div>
+    <a href="javascript:history.back()" class="logout-btn">Back</a>
+    </div>
+</div>
+
+<div style=" margin: 0 auto; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+  
+  <!-- Image Section -->
+  <center><img id="image" src="" alt="Image from URL" style="max-width: 100%; height: auto; border-radius: 8px;"><center>
+
+  <!-- Title Section -->
+  <h2 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 24px; color: #444; text-align: left; margin-top: 20px; margin-bottom: 20px; border-bottom: 2px solid #ccc; padding-bottom: 10px;">
+    Description
+  </h2>
+
+  <!-- Description Section -->
+  <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333; line-height: 1.6; padding: 20px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
+    {{data}}
+  </div>
+
+</div>
+
+
+ 
+    <script>
+        // Function to get the value of a URL parameter
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);  // Return the value of the specified parameter
+        }
+
+        // Get the 'img' parameter from the URL
+        var imageUrl = getUrlParameter('img');
+
+        // Set the 'src' of the image element to the img URL from the query parameter
+        if (imageUrl) {
+            document.getElementById('image').src = imageUrl;
+        } else {
+            // If no 'img' parameter, display an alternate message or placeholder
+            document.getElementById('image').alt = 'No image URL found';
+        }
+    </script>
+
+    
+</body>
+</html>

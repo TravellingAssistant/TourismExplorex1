@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .search-box {
+
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .voice-btn {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background-color: #fff;
+      color: white;
+      border-radius: 50%;
+      border: none;
+      font-size: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+
+        .search-box input {
+		box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+            width: 75%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid blue;
+            border-radius: 5px;
+        }
+
+        .search-box button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background-color: #0056b3;
+        }
+        /* General Styles for Dropdowns */
+select.filter-dropdown, select.sorting-dropdown {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 10px 0;
+    width: 250px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+/* Dropdown Hover Effect */
+select.filter-dropdown:hover, select.sorting-dropdown:hover {
+    border-color: #007bff;
+    background-color: #e9f7ff;
+}
+
+/* Focus Effect */
+select.filter-dropdown:focus, select.sorting-dropdown:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Styling for Filter and Sorting Dropdown Section */
+.filter-dropdown, .sorting-dropdown {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Spacing Between Dropdowns */
+.filter-dropdown {
+    margin-right: 15px;
+}
+
+/* Container for Dropdowns */
+.dropdown-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+/* Label Styles (Optional) */
+label {
+    font-size: 16px;
+    margin-right: 10px;
+    font-weight: bold;
+    color: #333;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+       
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .col-md-4 {
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .shbtn {
+            width: 25%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .username {
+            font-size: 18px;
+
+        }
+
+        .header .logout-btn {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header .logout-btn:hover {
+            background-color: #c82333;
+        }
+
+        .header .package {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .package:hover
+        {
+            background-color: #FFF;
+            color: black;
+        }
+
+
+        footer {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        #map {
+            height: 250px;
+            width: 100%;
+            margin-top: 0px;
+            display: none;
+            z-index: 0;
+            position: relative;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-btn {
+            position: fixed;
+            bottom: 70px;
+            right: 5px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .chatbox {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            width: 300px;
+            max-height: 80%;
+            height: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+            padding: 10px;
+            overflow-y: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chatbox-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .chatbox-body {
+            overflow-y: auto;
+            height: 80%;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .chatbox-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .chatbox-footer input {
+            width: 80%;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .chatbox-footer button {
+            width: 15%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chatbox-footer button:hover {
+            background-color: #0056b3;
+        }
+		
+		.loader {
+    position: absolute;
+    margin-top: 5px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    color: #333;
+}
+
+.loader::after {
+    content: '...';
+    animation: ellipsis 1s infinite;
+}
+
+@keyframes ellipsis {
+    0% {
+        content: '...';
+    }
+    33% {
+        content: '..';
+    }
+    66% {
+        content: '.';
+    }
+    100% {
+        content: '...';
+    }
+}
+/* General container for the itinerary */
+#itinerary-container {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+}
+
+/* Loader styles */
+.loader {
+    text-align: center;
+    font-size: 24px;
+    color: #007bff;
+    font-weight: bold;
+    margin: 50px 0;
+}
+
+/* Style for each attraction */
+.attraction {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Image container for attraction */
+.image-container {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.image-container img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Attraction header */
+.attraction-header h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Table styling for each attraction's details */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    width: 180px;
+    font-weight: bold;
+    color: #555;
+}
+
+td {
+    color: #444;
+}
+
+/* Cost style */
+.cost {
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* Rating style */
+.rating {
+    color: #ffd700;
+}
+
+/* Kilometer calculation */
+.km {
+    font-weight: bold;
+    color: #17a2b8;
+}
+
+/* Responsive design: Adjust layout for smaller screens */
+@media (max-width: 768px) {
+    .attraction {
+        padding: 15px;
+    }
+
+    .attraction-header h2 {
+        font-size: 20px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    .image-container img {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .attraction-header h2 {
+        font-size: 18px;
+    }
+
+    table {
+        font-size: 10px;
+    }
+
+    .loader {
+        font-size: 20px;
+    }
+}
+
+
+
+
+#hotelInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Loader */
+#loader {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 20px auto;
+    color: #007BFF;
+}
+
+/* Hotel Card Styling */
+.hotel-card {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 280px;
+    text-align: center;
+ 
+}
+
+
+
+.hotel-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.hotel-card h2 {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    color: #333;
+}
+
+.hotel-card p {
+    font-size: 0.9rem;
+    margin: 8px 0;
+    color: #555;
+}
+
+.hotel-card a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.hotel-card a:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    #hotelInfo {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hotel-card {
+        width: 100%;
+        max-width: 350px;
+    }
+}
+
+/* Recommended Hotels Section */
+#recommendedhotelCard {
+    text-align: center;
+    display: none; /* Initially hidden */
+}
+
+#recommendedhotelCard h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+.result-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+			max-height:200px;
+			overflow-y:auto;
+			width:75%;
+			box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .result-item p {
+            margin: 0;
+        }
+
+        .region-type {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+           /* Card Styling */
+           .detail-card {
+            width: 300px; /* Medium-sized card */
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+/* Floating cloud icon */
+#cloud-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 20px;
+    background-color: white;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+#chat-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+	z-index:200;
+}
+
+#chat-header {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px 10px 0 0;
+}
+
+#chat-content {
+    flex: 1;
+    padding: 10px;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#chat-content p {
+    margin: 0;
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 75%;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+/* User (request) styles */
+#chat-content p.user {
+    background-color: #bee5eb;
+    color: #0c5460;
+    align-self: flex-end;
+    text-align: right;
+}
+
+/* System response styles */
+#chat-content p.response {
+    background-color: #d1ecf1;
+    color: #0056b3;
+    align-self: flex-start;
+    text-align: left;
+}
+
+/* Chat input */
+#chat-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+}
+
+#chat-input input {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#chat-input button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#chat-input button:hover {
+    background-color: #0056b3;
+}
+
+
+ h2 {
+            text-align: center;
+            color: white;
+        }
+		
+ h1 {
+            text-align: center;
+            color: #2e3b4e;
+        }
+        .tourism-place {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .place {
+            margin: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+        }
+        .place img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .place h3 {
+            color: #2e3b4e;
+            margin-top: 10px;
+        }
+        .place p {
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="header">
+    <div class="username">
+        Welcome, User! {{name}}
+    </div>
+    <h2 class="text-cehealthter">Welcome to Tourism Explorex</h2>
+    <div>
+        <a href="/userfeedback" class="package">Feedback</a>
+        <a href="/view-bookmarks" class="package">Trip List</a>
+        <a href="/out" class="package" >Packages</a>
+         <a href="/chatwithAI">
+        <button style="
+            background-image: url('/static/img/bot.jpg');
+            background-size: cover; 
+            background-position: center; 
+            width: 50px; 
+            height: 50px; 
+            border: none; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            padding: 0;
+            position: fixed;
+            bottom: 180px;
+            right:25px;
+        "></button>
+    </a>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+
+
+
+
+
+ <!-- Floating cloud icon -->
+ <div id="cloud-icon" onclick="toggleChat()">
+    ☁️
+</div>
+
+
+
+
+<!-- Chatbox -->
+<div id="chat-box">
+    <div id="chat-header"> 
+        <h3>Weather Assistant</h3>
+        <button id="close-chat" onclick="toggleChat()">✖</button>
+    </div>
+    <div id="chat-content"></div>
+    <div id="chat-input">
+        <input type="text" id="city-input" placeholder="Enter a city...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+<!-- Bootstrap JS and dependencies (Popper, Bootstrap JS) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script>
+     const form = document.querySelector('form');
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const response = await fetch('/predict', {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+        document.getElementById('result').innerHTML = `Predicted Cost: Rs. ${result.Cost}`;
+    });
+</script>
+
+<!-- Main Dashboard Content -->
+<div class="container">
+   
+
+    
+    <!-- Search Box -->
+    <div class="search-box">
+        <input type="text" oninput="fetchLocations()" id="placeName" placeholder="Search for Destination..." autocomplete="off" class="form-control">
+        <button class="shbtn" onclick="searchLocation()">Search</button> 
+    </div>
+    <button class="voice-btn" id="voiceButton">
+        🎙️
+    </button>
+
+
+    <script>
+        // Ensure the browser supports SpeechRecognition
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+        // Check browser support for SpeechRecognition API
+        if (!SpeechRecognition) {
+          alert("Your browser does not support Speech Recognition API.");
+          document.getElementById('voiceButton').disabled = true;
+        }
+    
+        // Create the recognition instance
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';  // Set language to English (US)
+        recognition.interimResults = false;  // We only need final results
+        recognition.maxAlternatives = 1;  // We only care about the first recognized result
+    
+        const placeNameInput = document.getElementById('placeName');
+        const voiceButton = document.getElementById('voiceButton');
+    
+        // Start voice recognition when the user clicks the voice button
+        voiceButton.addEventListener('click', () => {
+          recognition.start();
+          placeNameInput.placeholder = "Listening...";
+        });
+    
+        // Handle speech recognition results
+        // Handle speech recognition results
+recognition.onresult = (event) => {
+  const transcript = event.results[event.resultIndex][0].transcript.trim(); // Get the most recent result
+
+  // Remove the period at the end if it exists
+  const finalTranscript = transcript.endsWith('.') ? transcript.slice(0, -1) : transcript;
+
+  // Fill the search input with the final text (without a period at the end)
+  if (finalTranscript) {
+    placeNameInput.value = finalTranscript;
+    fetchLocations();  // Trigger location fetch when speech input is detected
+
+    // Auto-submit when speech recognition is complete
+    searchLocation();
+  }
+};
+
+    
+        // Error handler for speech recognition
+        recognition.onerror = (event) => {
+          console.log("Error occurred: " + event.error);
+        };
+    
+        // Function for fetching locations (as per your code)
+        function fetchLocations() {
+          const query = placeNameInput.value;
+          console.log("Fetching locations for:", query);
+          // Add your actual location fetching logic here
+        }
+    
+        // Function to handle the search button click
+        function searchLocation() {
+          const query = placeNameInput.value;
+          if (query) {
+            console.log("Searching for:", query);
+            // Add your actual search logic here, e.g., redirecting or searching within your site
+            alert("Searching for: " + query); // Example of showing an alert with the search query
+          } else {
+            alert("Please enter a destination.");
+          }
+        }
+      </script>
+ <div id="result" class="result-container"></div>
+
+<div id="map"></div>
+   
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner">
+       
+        <p>Loading...</p>
+    </div>
+
+    <!-- Alert for Error or Success -->
+    <div id="alertContainer"></div>
+
+   
+        
+        <div style="display:flex;">
+
+            <div  id="recommendedPlaceCard"  >
+
+        </div><!-- Recommendation Card (Initially Hidden) -->
+
+  
+		
+</div>
+
+
+
+
+<div  id="recommendedhotelCard" >
+ 
+        
+      <div id="loader" style="display: none;">Loading...</div>
+
+
+</div>
+
+<!-- Filter and Sorting Dropdown -->
+<select id="filterSortDropdown" class="filter-dropdown" onchange="filterItinerary()">
+    <option value="allRatings">Place: (No Filter)</option>
+    <option value="below3">Below 3 Ratings</option>
+    <option value="4">Rating 4</option>
+    <option value="5">Rating 5</option>
+    <option value="free">Free Attractions</option>
+    <option value="paid">Paid Attractions</option>
+    <option value="sortRatingAsc">Sort by Rating (Low to High)</option>
+    <option value="sortRatingDesc">Sort by Rating (High to Low)</option>
+    <option value="sortCostAsc">Sort by Cost (Low to High)</option>
+    <option value="sortCostDesc">Sort by Cost (High to Low)</option>
+</select>
+
+<select id="sorting" class="sorting-dropdown" onchange="sortHotels()">
+    <option value="allRatings">Hotel: (No Filter)</option>
+    <option value="priceLowHigh">Price: Low to High</option>
+    <option value="priceHighLow">Price: High to Low</option>
+    <option value="ratingHighLow">Rating: High to Low</option>
+    <option value="ratingLowHigh">Rating: Low to High</option>
+    <option value="nameAtoZ">Name: A to Z</option>
+    <option value="nameZtoA">Name: Z to A</option>
+</select>
+
+  
+     
+
+<!-- Modal for Feedback Form -->
+<div id="feedbackModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;">
+    <div style="background-color: white; padding: 20px; border-radius: 10px; width: 400px; max-width: 90%;">
+        <h2 style="text-align: center; margin-bottom: 20px;">Submit Your Feedback</h2>
+       
+
+	   <form id="feedbackForm" action="/submit_feedback" method="POST">
+    <!-- Hidden fields for user and attraction info -->
+    <input type="hidden" id="modalAttractionId" name="attraction_name" />
+
+    <div style="margin-bottom: 10px;">
+        <label for="rating" style="font-weight: bold;">Rating (1-5):</label>
+        <select id="rating" name="rating" required style="width: 100%; padding: 8px; margin-top: 5px;">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <label for="feedback" style="font-weight: bold;">Feedback:</label>
+        <textarea id="feedback" name="feedback" rows="4" required style="width: 100%; padding: 8px; margin-top: 5px;"></textarea>
+    </div>
+
+    <div style="text-align: center;">
+        <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Submit Feedback</button>
+    </div>
+</form>
+
+<!-- The Modal -->
+<div id="feedbackModal" class="modal">
+    <!-- Modal content here -->
+</div>
+        <button onclick="closeFeedbackModal()" style="margin-top: 15px; background-color: red; color: white; padding: 8px 16px; border: none; border-radius: 5px;">Close</button>
+    </div>
+</div>
+
+
+
+<div id="vijay" style="display: none; justify-content: space-between; gap: 10px; padding: 10px;">
+    <!-- Left side: Recommended Place -->
+    <div style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 8px; background-color: #ffffff; height: max-content;">
+      <h5 style="color: #333;"><center><b>Recommended Place</b></center></h5>
+      <center><p>Near By Famus Place show here</p></center>
+    
+    
+      <div id="itinerary-container" >
+    
+      </div>
+    
+    
+    </div>
+
+    <!-- Right side: Recommended Hotel -->
+    <div style="flex: 3; padding: 10px; border: 1px solid #ccc; border-radius: 8px; background-color: #ffffff;">
+      <h5 style="color: #333;"><center><b>Recommended Hotel</b></center></h5>
+      <center><p>Near By Famus Hotels Show here</p></center>
+    
+      <div id="hotelInfo" ></div>
+    
+    </div>
+  </div>
+
+
+    
+    
+    <div class="tourism-place" id="tourism-place">
+	
+	 <!-- Example for Meenakshi Temple -->
+        <div class="place">
+            <img src="data:image/jpeg;base64,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" alt="Meenakshi Temple">
+            <h3>Vijayawada</h3>
+            <p>Location: vijayawada, Andhra Pradesh</p>
+        </div>
+		
+		
+		
+		
+		        <div class="place">
+            <img src="https://res.cloudinary.com/dnklrtoxl/image/upload/v1741506451/Kanakadurga_Temple_gopuram_peitxg.jpg" alt="Meenakshi Temple">
+            <h3>Kanaka Durga Temple</h3>
+            <p>Location: vijayawada, Andhra Pradesh</p>
+        </div>
+	
+	
+	   <div class="place">
+            <img src="https://res.cloudinary.com/dnklrtoxl/image/upload/v1741273338/desktop-wallpaper-tirumala-venkateswara-temple-in-andhra-pradesh-tirupati-temple_gizhc0.jpg" alt="Tirupathi Temple">
+            <h3>Tirupathi</h3>
+            <p>Location: Chittoor, Andhra Pradesh</p>
+        </div>
+	
+        <!-- Example for Meenakshi Temple -->
+        <div class="place">
+            <img src="https://res.cloudinary.com/dnklrtoxl/image/upload/v1741274902/srisailam_z0xrjx.jpg" alt="Meenakshi Temple">
+            <h3>Srisailam</h3>
+            <p>Location: Kurnool, Andhra Pradesh</p>
+        </div>
+
+        <!-- Example for Marina Beach -->
+        <div class="place">
+            <img src="https://res.cloudinary.com/dnklrtoxl/image/upload/v1741507161/4c893191464d9abfdae046f92bad0ddb_yzqsfw.jpg" alt="Marina Beach">
+            <h3>Rushikonda Beach</h3>
+            <p>Location: Vishakapatanam, Andhra Pradesh</p>
+        </div>
+
+        <!-- Example for Brihadeeswarar Temple -->
+        <div class="place">
+            <img src="https://res.cloudinary.com/dnklrtoxl/image/upload/v1741506552/19488679_697429360444270_3188699791108890886_o1_hfazuo.avif" alt="Brihadeeswarar Temple">
+            <h3>Simhachalam</h3>
+            <p>Location: Vishakapatanam, Andhra Pradesh</p>
+        </div>
+
+        <!-- Example for Ooty -->
+        <div class="place">
+            <img src="https://res.cloudinary.com/dnklrtoxl/image/upload/v1741275714/araku_yyd4f4.jpg" alt="Ooty">
+            <h3>Araku valley</h3>
+            <p>Location: Vishakapatanams, Andhra Pradesh</p>
+        </div>
+
+        <!-- Example for Rameswaram -->
+        <div class="place">
+            <img src="https://res.cloudinary.com/dnklrtoxl/image/upload/v1741506721/arasavalli1_ljr9m0.jpg" alt="Rameswaram">
+            <h3>Sri Sri Sri Suryanarayana Swamy Temple</h3>
+            <p>Location: Srikakulam, Andhra Pradesh </p>
+        </div>
+    </div>
+
+
+
+
+<!-- JavaScript -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+<script>
+
+document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent normal form submission
+
+    const formData = new FormData(this); // Get the form data
+
+    // Use AJAX to submit the form
+    fetch("/submit_feedback", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            // If response is 200, close the modal
+            alert("Feedback submitted successfully. Thanks a lot!");
+			            // Clear the form fields
+            document.getElementById("feedbackForm").reset(); // Reset form (clears text areas, selects, etc.)
+            closeFeedbackModal();
+
+
+        } else {
+            // Handle error if needed
+            alert("There was an error submitting your feedback.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("An error occurred while submitting your feedback.");
+    });
+});
+    // Function to open the feedback modal and set the attraction ID
+    function openFeedbackModal(attractionId) {
+        document.getElementById('modalAttractionId').value = attractionId;  // Set the attraction_id
+        document.getElementById('feedbackModal').style.display = 'flex';  // Show the modal
+    }
+
+    // Function to close the feedback modal
+    function closeFeedbackModal() {
+        document.getElementById('feedbackModal').style.display = 'none';  // Hide the modal
+    }
+
+const apiKey = 'ce1236ca58b5a9d86f47cbf82606dfce'; // Replace with your OpenWeather API key
+
+// Toggle chat visibility
+function toggleChat() {
+    const chatBox = document.getElementById('chat-box');
+    chatBox.style.display = chatBox.style.display === 'flex' ? 'none' : 'flex';
+}
+
+// Handle sending a message
+function sendMessage() {
+    const inputField = document.getElementById('city-input');
+    const city = inputField.value.trim();
+
+    if (!city) {
+        addMessage('Please enter a city name.', 'response');
+        return;
+    }
+
+    addMessage(city, 'user'); // Add user's message to the chat
+    fetchWeather(city); // Fetch weather data
+    inputField.value = ''; // Clear the input field
+}
+
+// Fetch weather data
+async function fetchWeather(city) {
+    const apiUrl = `https://jokerscript.xyz/api/travel/wind.php?city=${city}&appid=${apiKey}&units=metric`;
+
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('City not found');
+        }
+
+        const data = await response.json();
+        displayWeather(data);
+    } catch (error) {
+        addMessage(error.message, 'response'); // Show error as a response
+    }
+}
+
+// Display weather information
+function displayWeather(data) {
+    addMessage(`Weather in ${data.name}:`, 'response');
+    addMessage(`Temperature: ${data.main.temp}°C`, 'response');
+    addMessage(`Weather: ${data.weather[0].description}`, 'response');
+    addMessage(`Humidity: ${data.main.humidity}%`, 'response');
+    addMessage(`Wind Speed: ${data.wind.speed} m/s`, 'response');
+}
+
+// Add a message to the chat
+function addMessage(message, type) {
+    const chatContent = document.getElementById('chat-content');
+    const messageElement = document.createElement('p');
+    messageElement.textContent = message;
+
+    // Apply type-based class
+    messageElement.className = type;
+
+    chatContent.appendChild(messageElement);
+
+    // Scroll to the bottom
+    chatContent.scrollTop = chatContent.scrollHeight;
+}
+
+
+
+
+// Variables for map and routing
+var mapInitialized = false;
+var map;
+var routeControl; // To hold the route
+
+// Function to initialize the map
+function initializeMap() {
+    map = L.map('map').setView([51.505, -0.09], 13); // Default to a position (latitude, longitude)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+}
+
+let dayDetails;
+let dayDetailsduplicate;
+let itineraryContainer;
+let renderhoteldata
+// Function to search location
+
+// Function to filter the itinerary based on selected rating
+function filterItinerary() {
+  const selectedOption = document.getElementById('filterSortDropdown').value;
+
+  // Create a new array to hold the filtered itinerary
+  let filteredItinerary = [...dayDetailsduplicate]; // Create a copy to prevent mutation
+
+  // Apply filtering based on the selected option
+  if (selectedOption === "below3") {
+    filteredItinerary = filteredItinerary.filter(attraction => parseFloat(attraction.avg_rating) < 3);
+  } else if (selectedOption === "4") {
+    filteredItinerary = filteredItinerary.filter(attraction => parseFloat(attraction.avg_rating) >= 4 && parseFloat(attraction.avg_rating) < 5);
+  } else if (selectedOption === "5") {
+    filteredItinerary = filteredItinerary.filter(attraction => parseFloat(attraction.avg_rating) <= 5);
+  } else if (selectedOption === "free") {
+    // Filter for free attractions (considering 'Free' or '0' cost)
+    filteredItinerary = filteredItinerary.filter(attraction => attraction.node_average_cost === 'Free' || attraction.node_average_cost === 0);
+  } else if (selectedOption === "paid") {
+    // Filter for paid attractions (cost is greater than 0)
+    filteredItinerary = filteredItinerary.filter(attraction => attraction.node_average_cost !== 'Free' && attraction.node_average_cost !== 0);
+  }
+
+  // Apply sorting based on the selected option
+  if (selectedOption === "sortRatingAsc") {
+    filteredItinerary.sort((a, b) => parseFloat(a.avg_rating) - parseFloat(b.avg_rating));
+  } else if (selectedOption === "sortRatingDesc") {
+    filteredItinerary.sort((a, b) => parseFloat(b.avg_rating) - parseFloat(a.avg_rating));
+  } else if (selectedOption === "sortCostAsc") {
+    filteredItinerary.sort((a, b) => {
+      const costA = a.node_average_cost === 'Free' || a.node_average_cost === 0 ? 0 : parseFloat(a.node_average_cost);
+      const costB = b.node_average_cost === 'Free' || b.node_average_cost === 0 ? 0 : parseFloat(b.node_average_cost);
+      return costA - costB;
+    });
+  } else if (selectedOption === "sortCostDesc") {
+    filteredItinerary.sort((a, b) => {
+      const costA = a.node_average_cost === 'Free' || a.node_average_cost === 0 ? 0 : parseFloat(a.node_average_cost);
+      const costB = b.node_average_cost === 'Free' || b.node_average_cost === 0 ? 0 : parseFloat(b.node_average_cost);
+      return costB - costA;
+    });
+  }
+
+  // Update the dayDetails with the filtered and sorted itinerary
+  dayDetails = filteredItinerary;
+
+  console.log("Filtered and Sorted itinerary:", dayDetails);
+
+  // Re-render the itinerary with filtered and sorted data
+  rerender();
+}
+
+
+function sortHotels() {
+    const criteria = document.getElementById('sorting').value;
+
+    // Sorting by price from low to high
+    if (criteria === 'priceLowHigh') {
+        renderhoteldata.sort((a, b) => a.price_per_night - b.price_per_night);
+    }
+    // Sorting by price from high to low
+    else if (criteria === 'priceHighLow') {
+        renderhoteldata.sort((a, b) => b.price_per_night - a.price_per_night);
+    }
+    // Sorting by rating from high to low
+    else if (criteria === 'ratingHighLow') {
+        renderhoteldata.sort((a, b) => b.hotel_customer_rating - a.hotel_customer_rating);
+    }
+    // Sorting by rating from low to high
+    else if (criteria === 'ratingLowHigh') {
+        renderhoteldata.sort((a, b) => a.hotel_customer_rating - b.hotel_customer_rating);
+    }
+    // Sorting by hotel name from A to Z
+    else if (criteria === 'nameAtoZ') {
+        renderhoteldata.sort((a, b) => a.hotel_name.localeCompare(b.hotel_name));
+    }
+    // Sorting by hotel name from Z to A
+    else if (criteria === 'nameZtoA') {
+        renderhoteldata.sort((a, b) => b.hotel_name.localeCompare(a.hotel_name));
+    }
+
+    console.log(renderhoteldata, "Sorted Hotel Data");
+
+    // Re-render hotels after sorting
+    renderhotel();
+}
+
+
+function searchLocation() {
+    
+    var place = document.getElementById('placeName').value.trim();
+    if (!place) {
+        showAlert('Please enter a valid place name.', 'danger');
+        return;
+    }
+
+    showLoading(true);
+
+    var url = `https://nominatim.openstreetmap.org/search?format=json&q=${place}`;
+
+    var userPlace = place
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            showLoading(false);
+
+            if (data && data.length > 0) {
+                var lat = data[0].lat;
+                var lon = data[0].lon;
+                var placeName = data[0].display_name;
+
+                if (!mapInitialized) {
+                    initializeMap();
+                    mapInitialized = true;
+                }
+
+                // Set the map view to the searched location
+                map.setView([lat, lon], 13);
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(`<b>${placeName}</b>`)
+                    .openPopup();
+
+                document.getElementById('map').style.display = 'block'; // Show map
+                map.invalidateSize(); // Adjust map size
+                showAlert(`Location found: ${place}`, 'success');
+
+                 // Show the recommended hotel card
+                document.getElementById('vijay').style.display = 'flex';
+				// Show the Recommended Place Card after search success
+                document.getElementById('tourism-place').style.display = 'flex';
+				
+				document.getElementById('tourism-place').style.display = 'none';
+
+                // Create the route from the user's location (or a predefined location) to the searched place
+                getUserLocationAndCreateRoute([lat, lon]); // Use function to get user location and create the route
+
+            } else {
+                showAlert('Place not found. Try another location.', 'danger');
+                document.getElementById('recommendedPlaceCard').style.display = 'none'; // Hide if no result
+            }
+        })
+        .catch(error => {
+            showLoading(false);
+            showAlert('Error retrieving location. Please try again later.', 'danger');
+            document.getElementById('recommendedPlaceCard').style.display = 'none'; // Hide if error occurs
+        });
+		
+	
+	
+		
+				
+
+    // Function to fetch data for itinerary
+    var place = document.getElementById('placeName').value;
+	
+	// Fetch hotel data for a specific place when the page loads
+      
+    fetchHotelData(place); 
+			
+			
+			
+    fetch(`https://jokerscript.xyz/api/travel/famus_place.php?place=${place}`, {
+    method: 'GET', // or POST if you're sending data
+    headers: {
+        'Authorization': 'Bearer e8e0bc118c516278314afe5119e4566cb307f6d6' // Pass the token in the Authorization header
+    }
+})
+.then(response => response.json())
+.then(data => {
+    console.log(data);  // Log the entire data response to verify its structure
+    renderItinerary(data);
+})
+.catch(error => {
+    document.getElementById('itinerary-container').textContent = 'Error fetching data: ' + error;
+});
+
+
+    
+    
+    function renderItinerary(data) {
+        itineraryContainer = document.getElementById("itinerary-container");
+
+        
+        
+
+        const loader = document.createElement("div");
+        loader.classList.add("loader");
+        loader.innerHTML = "Loading...";
+        itineraryContainer.innerHTML = '';
+        itineraryContainer.appendChild(loader);
+
+        async function appendPlaceIfUserPlaceExists(userPlace, Detailsday) {
+    try {
+        const response = await fetch('static/dataset/places.json');  
+        const defaultJson = await response.json();  
+
+        defaultJson.forEach(place => {
+            if (place.destination_place.toLowerCase() === userPlace.toLowerCase()) {
+        dayDetails.unshift({
+            node_sequence_id: place.node_sequence_id,
+    node_id: place.node_id,
+    node_type: place.node_type,
+    node_name: place.node_name,
+    node_arrival_time: place.node_arrival_time,
+    node_departure_time: place.node_departure_time,
+    node_tags: place.node_tags,
+    node_coordinates_deg: place.node_coordinates_deg,
+    avg_rating: place.avg_rating,
+    no_of_ratings: place.no_of_ratings,
+    node_average_cost: place.node_average_cost,  
+    primary_image_url: place.primary_image_url,  
+    destination_place: place.destination_place,  
+    time_to_next_node_in_minutes: place.time_to_next_node_in_minutes,  
+    distance_to_next_node_in_metres: place.distance_to_next_node_in_metres,  
+    mode_of_transport_to_next_node: place.mode_of_transport_to_next_node  
+        });
+            }
+        });
+
+    } catch (error) {
+        console.error("Error loading JSON:", error);
+    }
+}
+
+setTimeout(async () => {
+    dayDetails = data.body.itinerary.subregions[0].daywise_details[0].itinerary_for_day;
+    await appendPlaceIfUserPlaceExists(userPlace, dayDetails);
+    dayDetailsduplicate = dayDetails;
+
+}, 1000);
+rerender(dayDetails)
+
+}
+}
+
+function rerender(displayparams){
+
+    
+        setTimeout(() => {
+            // Function to calculate the distance in kilometers between two sets of latitude and longitude
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371; // Radius of the Earth in kilometers
+        const dLat = (lat2 - lat1) * (Math.PI / 180); // Difference in latitude
+        const dLon = (lon2 - lon1) * (Math.PI / 180); // Difference in longitude
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c; // Distance in kilometers
+        return distance.toFixed(2); // Return distance rounded to two decimal places
+    }
+
+    // Function to convert time from 24-hour to 12-hour format with AM/PM
+    function convertTo12HourFormat(time) {
+        const [hours, minutes] = time.split(":");
+        let period = "AM";
+        let h = parseInt(hours);
+
+        if (h >= 12) {
+            period = "PM";
+            if (h > 12) h -= 12;
+        } else if (h === 0) {
+            h = 12;
+        }
+
+        return `${h}:${minutes} ${period}`;
+    }
+
+            let previousAttraction = null;
+
+            let itineraryHTML = '';
+
+            dayDetails.forEach(attraction => {
+                let attractionHTML = '';
+// Iterate through the attractions and create HTML dynamically
+attractionHTML += `
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; margin-bottom: 20px;">
+        <div class="attraction" style="flex: 1 0 30%; min-width: 300px; max-width: 300px; box-sizing: border-box; margin-bottom: 20px; display: flex; flex-direction: column; border: 1px solid #ddd; border-radius: 10px; background-color: #fff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+            
+            <a href="dis/${attraction.node_name}?img=${attraction.primary_image_url}" style="text-decoration: none;">
+  <img 
+    src="${attraction.primary_image_url || 'https://www.cvent.com/sites/default/files/image/2021-08/exterior%20view%20of%20the%20sign%20at%20the%20front%20of%20a%20ho'}" 
+    alt="${attraction.node_name}" 
+    style="width: 100%; height: 200px; object-fit: cover; border-top-left-radius: 10px; border-top-right-radius: 10px;" 
+    onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR12LKEoIyLeXdvlA-sc6YgS6V3EmmWaJe_ZA&s';" />
+</a>
+
+
+            <div class="attraction-header" style="padding: 15px; text-align: center; background-color: #f8f8f8; border-bottom: 1px solid #ddd;">
+               <a href="dis/${attraction.node_name}?img=${attraction.primary_image_url}" style="text-decoration: none;">
+  <h2 style="font-size: 20px; font-weight: bold; color: #333; margin: 0;">
+    ${attraction.node_name}
+  </h2>
+</a>
+
+            </div>
+            
+            <div style="padding: 15px; flex-grow: 1;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                    <tr>
+                        <th style="text-align: left; padding: 8px 0; font-weight: bold; color: #555;">Arrival Time</th>
+                        <td style="padding: 8px 0; color: #777;">${convertTo12HourFormat(attraction.node_arrival_time)}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; padding: 8px 0; font-weight: bold; color: #555;">Departure Time</th>
+                        <td style="padding: 8px 0; color: #777;">${convertTo12HourFormat(attraction.node_departure_time)}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; padding: 8px 0; font-weight: bold; color: #555;">Cost</th>
+                        <td style="padding: 8px 0; color: #777;">₹${attraction.node_average_cost}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; padding: 8px 0; font-weight: bold; color: #555;">Rating</th>
+                        <td style="padding: 8px 0; color: #777;">
+                            ${"★".repeat(Math.round(attraction.avg_rating))} (${attraction.avg_rating})
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; padding: 8px 0; font-weight: bold; color: #555;">Distance</th>
+                        <td style="padding: 8px 0; color: #777;">
+                            ${previousAttraction && previousAttraction.node_coordinates_deg.lat && previousAttraction.node_coordinates_deg.long 
+                                ? calculateDistance(
+                                    parseFloat(previousAttraction.node_coordinates_deg.lat), 
+                                    parseFloat(previousAttraction.node_coordinates_deg.long), 
+                                    parseFloat(attraction.node_coordinates_deg.lat), 
+                                    parseFloat(attraction.node_coordinates_deg.long)
+                                ) : "-"} KM
+                        </td>
+                    </tr>
+                </table>
+                <button onclick="openFeedbackModal('${attraction.node_name}')" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Give Feedback</button>
+
+                <button onclick="window.location.href='/show_reviews?attraction_name=${attraction.node_name}'" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Show review</button>
+
+                <button style="background:none; border:none; background-color:transparent; cursor: pointer;" 
+        id="bookmark-btn"  
+        onclick="bookmarkPlace('${attraction.node_id }','${attraction.node_name}', '${attraction.primary_image_url}', this)">
+    <span id="star-${ attraction.node_id }" style="font-size: 25px;">✩</span>
+</button>
+
+<div class="social-container" style="display: flex; justify-content: space-evenly; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+
+    <!-- Facebook Share Button -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u=${attraction.primary_image_url}" target="_blank" style="text-decoration: none;">
+        <div class="social-button facebook" style="position: relative; width: 30px; height: 30px; border-radius: 50%; background-color: #3b5998; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; justify-content: center; align-items: center; transition: all 0.3s ease; cursor: pointer;">
+            <i class="fab fa-facebook-f" style="font-size: 25px; color: white;"></i>
+            <div class="tooltip" style="position: absolute; bottom: 80%; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;">
+                Share on Facebook
+            </div>
+        </div>
+    </a>
+
+    <!-- WhatsApp Share Button -->
+    <a href="https://wa.me/?text=${attraction.primary_image_url}" target="_blank" style="text-decoration: none;">
+        <div class="social-button whatsapp" style="position: relative; width: 30px; height: 30px; border-radius: 50%; background-color: #25D366; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; justify-content: center; align-items: center; transition: all 0.3s ease; cursor: pointer;">
+            <i class="fab fa-whatsapp" style="font-size: 25px; color: white;"></i>
+            <div class="tooltip" style="position: absolute; bottom: 80%; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;">
+                Share on WhatsApp
+            </div>
+        </div>
+    </a>
+
+    <!-- Instagram Share Button -->
+    <a href="https://www.instagram.com/direct/new/?text=${attraction.primary_image_url}" target="_blank" style="text-decoration: none;">
+        <div class="social-button instagram" style="position: relative; width: 30px; height: 30px; border-radius: 50%; background-color: #C13584; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); display: flex; justify-content: center; align-items: center; transition: all 0.3s ease; cursor: pointer;">
+            <i class="fab fa-instagram" style="font-size: 25px; color: white;"></i>
+            <div class="tooltip" style="position: absolute; bottom: 80%; left: 50%; transform: translateX(-50%); background-color: #333; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;">
+                Share on Instagram
+            </div>
+        </div>
+    </a>
+</div>
+                
+
+
+            </div>
+        </div>
+    </div>
+`;
+
+
+                itineraryHTML += attractionHTML;
+
+                previousAttraction = attraction;
+            });
+
+            itineraryContainer.innerHTML = itineraryHTML;
+        }, 2000);
+    }
+
+
+function bookmarkPlace(node_id ,node_name, primary_image_url) {
+    const star = document.getElementById("star-" + node_id);
+
+    console.log("Node Name:", node_name);
+    console.log("Image URL:", primary_image_url);
+    
+    if (star.innerHTML === "★") {
+        star.innerHTML = "✩"; 
+        fetch('/delete-bookmark', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            node_name: node_name,
+            image_url: primary_image_url
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Bookmark deleted:", data);
+        
+        // Change the star to empty (unbookmarked state)
+        star.innerHTML = "✩";  // Empty star
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    }); 
+    } else {
+        star.innerHTML = "★";  
+        fetch('/bookmark', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            node_name: node_name,
+            image_url: primary_image_url
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Bookmark response:", data);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+
+    }
+
+}
+
+
+
+// Function to create and display the route from user's location to searched place
+function getUserLocationAndCreateRoute(destinationLatLon) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var userLat = position.coords.latitude;
+            var userLon = position.coords.longitude;
+
+            // Now create the route from the user's location to the destination
+            createRoute([userLat, userLon], destinationLatLon);
+
+        }, function(error) {
+            showAlert('Unable to retrieve your location. Error: ' + error.message, 'danger');
+            createRoute([51.505, -0.09], destinationLatLon);  // Fallback to default location if unable to get user location
+        });
+    } else {
+        showAlert('Geolocation is not supported by this browser.', 'danger');
+        createRoute([51.505, -0.09], destinationLatLon);  // Fallback to default location if geolocation is not supported
+    }
+}
+
+// Function to create and display the route
+function createRoute(startLatLon, endLatLon) {
+    if (routeControl) {
+        routeControl.remove(); // Remove existing route if any
+    }
+
+    // Create a route between the start and end points
+    routeControl = L.Routing.control({
+        waypoints: [
+            L.latLng(startLatLon[0], startLatLon[1]),
+            L.latLng(endLatLon[0], endLatLon[1])
+        ],
+        routeWhileDragging: true
+    }).addTo(map);
+}
+
+// Show or hide loading spinner
+function showLoading(isLoading) {
+    var spinner = document.querySelector('.loading-spinner');
+    spinner.style.display = isLoading ? 'block' : 'none';
+}
+
+// Show alert messages
+function showAlert(message, type) {
+    var alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `<div class="alert alert-${type}" role="alert">${message}</div>`;
+}
+
+          // Iterate through the hotels and create HTML dynamically
+          function renderhotel() {
+            let hotelInfoHtml = '';
+            renderhoteldata.forEach(hotel => {
+    hotelInfoHtml += `
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; margin-bottom: 20px; height: auto;">
+        <div class="hotel-card" style="flex: 1 0 30%; min-width: 350px; max-width: 350px; box-sizing: border-box; margin-bottom: 20px; display: flex; flex-direction: column; border: 1px solid #ddd; border-radius: 10px; background-color: #fff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease;">
+            
+            <!-- Hotel Image -->
+         <div class="image-container" style="margin-bottom: 10px;">
+    <img 
+        src="${hotel.image_url[0]}" 
+        alt="${hotel.hotel_name}" 
+        style="width: 150px; height: 100px; object-fit: cover; border-top-left-radius: 10px; border-top-right-radius: 10px; margin-top: 30px;"
+        onerror="this.onerror=null; this.src='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUSEhMWFhUXGBcYFxcXGBkXFRcYFxgXGBgYFxUYHiggGBolHRUXITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGhAQGysgHyUtLSstLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLf/AABEIAOEA4QMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAADAAIEBQYBBwj/xABMEAABAwEDBwkEBQgKAQUAAAABAAIRAwQhMQUGEkFRYXETIoGRobHB0fAyQlLhBxQjgpIzQ1NicrLS8RUWJDRjc4Ois8JUJZPT4vL/xAAZAQADAQEBAAAAAAAAAAAAAAABAgMEAAX/xAApEQACAgEDAwQCAgMAAAAAAAAAAQIRAxIhMRNBUQQiMoEUYSMzQmKx/9oADAMBAAIRAxEAPwC0ARWpgRGryD0AjEdiGwIzQiAIxFah0wigIo5j6byFJp1tt6jtCIAmWwr3JTXtRAFFAT2p0xKJEJ4UdtQ7U9tbaEykK0HATwEDlRt610VFRSQtEgBOAUdtYJ4rhOpIWiSGpwaov1toxcBxIHemOytRGNWmPvt802pAplgGLugqz+sFnH55nQZ7lw5zWYfnAu1x8naZeC2DF3QVMc67P8RPV5obs8KGoOPV5odWHk7RLwXuiu6CzT89qQwpk/eHgCo78+xqoHrP8K7rQ8ndOXg12gloLFvz7dqogcSfko78+6upjB0j+JL14DdKRvNBLRXnb8+LQcNAdXkVHfnhaT+cA4Dyah+RA7oyPTNFJeX/ANbLT+mPUf4UkPyYh6DCQiNTQE9rViNQamisTGBFaEwAlNGaEKmitCZAYRqI1DCIwJgBAE8BMCIFwjOQkQnQkWonEd7VW5TqvbTcWOLSAYI4b1a1NpUG2Uw5pG0KcikTzfKWXrSDfUJ7P3YVe3LdY4ud+L5KLbMv0HOIAfIJGAGGOtR2ZVpD3Xf7fNFQkluVTi+xa/XHnGelx8CE9tVx1Drcf+yrhl2mPcd1t808ZxU/0Z/E1DQxr/Ra2am97mtboy4hokDFxgXmdZWjp5nW346I+95UliaWdIa5rgz2XB3ti/RIOxaY/Syf/Eo9NY/wBNHFfIktf+JdMzMtWutSEzgXbtjBt7FJp5l1tdoZ0afyWYqfSg41GVBRs7S1r2xpOcDplhkm7DQ7U8fStX1CyD7tT/5E6xx/YujL+i3yrm8+jeageIkkEiOIKgDJkwVUZRz7qV/bNnH7II2ay87Fc5JZbqwHIizkapewHUcC+cCFN499kFxklcmgrcl7kcZL1kXcLlaUsnZYDY0rO0AXRo+DSgPyLlSvTGnaKIaYMCWm4zfFMGLsMCj034Fr/ZFcyxNx1Tjq612tZ2tvOvDE93DsKTcwLRpOJtNJpMEmahk9Q2IOUcw3tbLrTTqX+yGvJ43lF46OUb21f9JH1dux34HeS4m/0DX/APNd+F/8SSSkN035LIIrAmgIjGpQD2IjQmgIjQmAPphFCawIjQigDmojUxqe1MBhAE9qaE8IiDkkgkicU+dLiLK8gwZpC7fVYD3plkph1NpOIukXG7eE7Oz+6u/bof8APTTcnvApiSBjjcs8/mWj8PsxOd2azHTUZGlrDgD249qwNHJDg5wLG3GLwTqnbvXtOVwCNvBYxlnHKP6P3R5FdHNKOxRQT5MxTyQ74Kf4PmpDcju+Gn/7YWupWYI7LMEHmkUpGObkR2xnRTb5J/8AQTtvUxg8FsxRbu7E7mfE3rCHVkCkY1uQHbT1DyTv6vO+J3XC2QfSHvt/EF02ij8besLupIGxhbTm4QCZdhtK94zXsrfq4DgHDm43i6mwa+C88tNamWkBwNx9YL0/Id1ETqA7GhafTScnuZvU8bAK2RaAY6KYuaYlzjgN5VHmbYqVWxUKlakx9R7CXOcBJOk7EYagtJaLfRDHE1aeB99uw71SZl5QoMsNna+rSaQy8Oe0Ec5xFxM61qpWQTlp+yZZMkWY1ag+r0YDacDk2EAk1JOGuB1BZz6VbMyjYg+gxtN/KNGlTaGOjReYlomLh1LT0crWblah5elBbT/ONi41J171mPpUt9GpYg2nVpuPKNJDXBxA0XibjwQmo6WNi1a0ZXlTtSTdJnxBJRpGqjUMCM1ibQiVJLVkvcNbAwERoSCc1URIexGptQ2KTQF6N0dQ0sSaEaq1MARiBjqYRISpIlRqIBoCaUZguQnLkwNFLnb/AHY/5lD/AJqaWSjNPpK5ncf7P/qUf+VibkV3MPHwUZ/2Fof1/ZHyrY6ZEljfwjyWQFgYKr+b8O34RvW4yhgsnU/Ku4N8VJumUhwdp2Cn8DVJp2Cn+jb1BOpo7SlsdnKdjp6qbPwjyUplFupreoJjUZhRsRjmNRmk7UNpTwUQArWTongVuskfkh61BYW1nmngt3kj8kOla/SfJmb1HCH1/Yd+y7uKq8xz/wCn2b/L8XKxtFYBjva9l3uu2HcqrNSsxljoNJcIZqa+MTrDVt21fRFL2faLOzn7arHw0++qsf8AS49zrM1kOJ5RpESZEPHWDd0haejbqYq1Lze2n7r/APE/V3rP/SLXa+y8x0w9s4g+8RiNsJMnxY2L+xGV5VuwdSSuPq5/TdoSULNepFRbMptpN03uLWiJPTGC2GTrKx7KdW86bWu9pwHOaCObMYHBeS541ibO8apbP4m+Stsl/StpOpUm2cYhvtkXARjB1DYvO6GSaUo+dzVmyQXt4PSso2cN0YESCojU2hlcWmm14EAk8biWntCc0rWjCwjMEOta20m6byQ2QLv1iAB1kIjRcspnzXc2yPcDDWvpX438o03DXtUM0ZNpLuXw0+T0mjYmuAcZvAMSYvGxRLTSDXkDD5LDZm/STWttdtHkqdMCm55xfc3RAAjRj2tc4La1qxcZPYtMYOK3M8k0yPlG1MpMdVfIaxpcYxgY3K6s1na5rXRiAbydY2TCx2e39ytGoCk+erBYbNf6QbZVqsYa0tAJAgYC4TtUowetyKuKcFTo9cpVG/WTQv0tEv3aOlAvUu3WcNaCBr89q8u+kjK9ps9tous7nhz6Za4tBcSA64XDbCvMxsq2qtRf9ZNSQWxptLTfpE+0BOATwVfYs4bJ2TM6/wAh/qUf+RqFkM8x3EdydnW77Af5lP8AeCDkJ3Nd0dxUpv3jw/rJVuNyydc/au/Zb/2WrtpuWRtLvtj+y3vepvkeBNplHaVEpOUhpQHJLCiNKA0ogK4Vh2lEBQGlEBRQoy1nmngV6Bkj8kOlef2j2TwK9ByR+SHStnpPkzL6jhD7R7LuB7ioGbctstEbGDxU61PuIh14OAJ1bVWWOsadNjTSqkhoFzJHetlrV9EUm4beSwoA8pUO5n/bzVB9IjSbKNzwex3yVjSyo1pdNOsJ0fzZ1Dcq3Oe1tr0eTY2pOkDzqbmiMDeRGtLkktLKYoyWRNlVyZ2JKz0qe/8AA/8AhSWcvTPM848hPrUTTY4CSMdxB1cFUZE+jqqyoyoa7BomY0XGbuO9Xzs6aH654N8yFwZ4MGFKofwjxSY5ShGkHJBzdtGsyTZeRpNp6WlBcZiJ0nF2F+1TmOWHOeTsBR63eQXf631dVJnSXHyQvyHpSN8xRMq5Lp16fJVG6TSWuI1HRMwY1KtzdzhFoJY5mg8N0rjLXQQDGsG8GL+KvZXbOhN47FdkbNqyWd/K0aQY8tLZa50aJIJGiSRi0K5JQQ5P0kzbfIlHazQ5paQCDcQRIO4gp1mY1ohoA4ADuTC5LSXBHvPOB2J9SpKCXLjnIHUVGdjvsR/mM70DIDrn9HilnY77Fv8AmM8VFyDVAD+jxWefzNEV/GSaNs5V9WngGP0QcSbgTdxKo8sZPqUqmmedTLQA8TAMuucPdN4xQMg2ua9eL/tT2tbs1LSjLVHRnTDm6MktIcDiC24+1uOKfRYupxexW5Jye+pBcHNYdcQT14KVlSzCm1jm4aWie0g9hUGhnVYWSG1TeTo6UuDeJOAmTfqUvI+XKVr02OaHN7x7rtxi/pCDhpjujlJtg2PRmuQ8oZNqUiC3nMJgHW2fi81YGxBtnqPxOgXT+zfdsFyiUvYjhyI1yg06so7HooDQau7mngV6Hkg/ZDp715raH808D3L0nIo+xb9794rb6TlmT1HCDVsDwPcuNJ9D5pteriNE69nmh/Wm7HdXzW60ZqYSnOk/7vch22oY0Yu5hmf8RoiE0WtgJJJ1ajsA8FV5z5VbTstasx3ODWgXEGS9oBvGrwStpJhUW2i85d2wfi+SS8b/AKy2j9PU/E5JR/IRo6D8mOsNkq1PydJ794aY68Fb2bNa2O/NBg2vqUx2NJPYtVUqvpmHgjZsPA4K+yeyWNdOIB61mTt0aJTaVmLoZj1iOfVpDhpO8ArCjmL8Vf8ADT83LXBEBT6CTyspckZrsoP021XuMEQQ2L+Cufqx1QexElOa9MoIm5tkZzSMQlKNUrCPUHoUcuU5Kh07HEqJlPKAotDiJkgR+0QPFSJWUz3tMBgH6Sn++1K34HirZqrJU02yblKFEbSqbJFS6FcMcjDdCy2Y21ZKpVW6LmzrF5xgwbjvWOszmGnzmkG8ENc4A9s9q3dJ68wzjylTs9WtSmXCrU5rQSQCSWyBhcQhkhdNDYpcplXSyYPrVU0nGnThpIHOJdfgXYHfvWHy/RDLTUDQQC7SE+1zr7yOlayll5jaekGu5R5dpNgyBgOxoWPyvaeVfpEGYgyIWjBq1b+Bc1KIHl3HEz62rZ5s5W0KlJukBpUmAThzZESsO3DBavMfKdGkH8qDpxDHbG4uaPhJN+9PnjcGJhn7j2OyViWwcDcUbK72tstURzS3RIF3tw04YYrz1ud7W3AkjgSekgKws2e1J4LKjXOYRBGg4g9mK82MJLsbJRV7Eyz2ejdc5v8AqOAv3l0BXFkyFSd+fI2hlUPI6wViK2WmMdDA97MQdEg3+64G+R23dBaeX262uH3SnSrlCyi3wzdnNdjhAtNWP9M/9FtckUXNpAOIN59kFuJ2EnvXiYy3QcbyZ4uaeyFZWHLtBtzbQ5u7lndxcr48sYb0QnhlLuevVaDcYd1kIRsrfieOnzC8SypnhaWVK/IWt5Yw2cMGkHB3KmH3643L0ahaap9m2v6eTeO4LQ80VTa5ILE3aTNIcntIvq1OHN/hWez3sjWWQtNQuBcIBAvIk4gblKo2isMa4cdvJsGzVON21ZP6SMpVOTp03PaTOkIGidTQTeZwcklmg1sPDHLUrMn9T/WHWkgw/wBQksm5p0m1yhZ9NpBubAdJMQfUda7k22spjRFUOwiXCbsbp9Qq63ZuV3ul9o5ZsyGOHJgcGDmlWmb1n0S5jmaJEEXAbjfr1KtVIk2tJYttYdgZ4XorXE6j1ecIwcE7lAq0Tsa1jjsHSispbSm6aXKFHYXcRsTTfJ4E3efWuikMICQnWegea4aLcZI6R4hI0hkzvIN2d/mqvK2bVC0Dnl4ggy10XgzrB2Ka4s/SOO4AR1geKbyzQWkQRPOLpkD9U3wUPb3G37EV1ibRLS1xLTdfjOqLhIgKY12xCylU5QN5O8gzfMRBwOCDRFUe0w9BBHepydPYZJtblgxx2Ly36Qc0bZWttWvZ6JqMeGGWuaDpBjWuuLgfdXqAEC+eopfWWjb1FUjOhWvB88W2xWmzn+0UqtITAL2uDScbnG49BQqdufqeezyX0eLc0CDgcQcDxacVis883bCaRtDKDGuDm6WiC1pDnBt4FwMkXiE7lGrDGUro8sGVXxBcDxHkj0MtOHut7irU5DsrsGub+y8+MoTs2KWqpUHHRPgFPXjZf+RcARnCJvZPA+aM3OOnrpns8FHfmv8ADW62+RUerm3VGD2HrHgilifc5zyeC1bnBZ9bXdXzUmlnLZR8XS35lZepkS0D3QeDh4woz8n1hjTd0Qe4pljx+RHkn4PQ7HnhYRHKMB36BnrBWoydnnkwiBVYzc9s/vNK8NfZ3jFjuooDhtHYqLGuzJSm3yjeZ45XoOqW99F1M8+xuolrWidEO0y2BuErdUMz6LabTZbW2rVaL6ddzHUapIEjmQ+lM3OabpGIXjeb2RH2uo5rHsYGgFz3zotkwLmgknsuxWuyHmbZalprWevaKlQUadJwdRLGyXjntJcH3CGxG0p5Vw6JRb/ZpbbnBZ6DhTr5JtrKuEUrRWLHH/DeHw4cFnsuZWFeroMs9agG6I0bQ5z6mlziQdK8CHi4re5MzOsNOAz6wBr/ALTWB6RTLQvNbZXEktnnlzjJJMOc4AEuvJ0Q283qE3Ctki+LU3bbJn1lm09ZSVdp7vXUko0Xs9YNbSggE7NQ69ibZ2VA7SdUBGAa1sADZpucS7VfAS04vJgbSbu1BdlBgwJdww6zd2p265M6iyzY7ieN6K0qkdlJ0c0Af7j5IFa3H3nG/ATf0Mi9K8qGWNmgfaGtxcJ2YnqF6G63jU0niQ0dsnsVLTqu90EDaZaOoST0gIzTqc+Lvdu75KXqsbplg62v3Abh4nyUc19K+S7rMdJubwlMboYxPGXeKNyo4bPRSNt8sKil2EJOsDtPZh2ozGgYgneQTHC6B0QmNeCnQB8taFBDcr6u811tRAJHokJAepnxTWwUiUKq7yu/tUSB6glO9erkbYKJfKb11z5uN/GCO1RMPR80p3+utHUDSEdY6J9qjSPGlT8kGpkWyuxs9L7rdH9yE4evUJ+n6/lPcjZ1EGpmvZTg17f2XnudKr7VmSDfSrkbqjZH42ER1K+Ff15aik60xf66PIrva+wU5LuYW25rWpl4pioP8N2kdfumHdQKz9eWnRc0tcMWuBa4cWm8Yr1atbIEz62eN68a+lDKDvr7ixxH2dPS4hvlCMMam6QXmcFcg73qO4hZduVqo96eIUullGqRIaHcDf1Yq348kD8mDLjImVWWepX0tEB7mRIn2cbtl6Zm1aT9aqVKmLtt0lztQVBag4ODntguh4A1g4dyO3Kw3hVlj2ddyCmr3PVbNll7NMBxIANxk4ibibwOnoWZdRAdzr7m3nhh2n1CzVDL+jN5MiL9mxTq+X2VHSWubgDs1eAWbpTRoWSHYu4HwDs8klU/09T9fzSXdOQepE3b7Q0m94c7f9o6/c2SEZr3EiGkb3Ojhzb+2ERhAuA0Y1QWiOi5Ea4n/wDU96zMpQMUCZ0nHXc0EDpLZO2+UWmxrbmgCdl08QcU3SjX1jR7k8PMeTvNCzgoGwdgP7q6XnZ3hALr/wD6z2pNqbxwkhcCiQDt7x8k8TF3j4ILX8Ogg966XDE90doK44Np7T2+YTmvP8o8EFtUbe09xT9IegETgnKn1ISFQ8eopnKDb3jtvXNP0CD2ELgEhjzv6AR3FOJ3n191RC7b+6D3JoqH3Y6CQus6icD6u+S6XnhxkHvIUA2k7TOxwmey5N+sapj9X3T63I2dRNNcgxF+/wDiCT7RF56do4bQqyplEC7VgW7NV3rWo1a3AY9Wog6idd/cV1naS0qW4X3iNeMcY2+tSh18owbrzf8AiaR2EFUT7QXEicA4XkRHRrxuT6bzJAkkSDqODYIOrZPBcNpLQVibjhJu1kQ7w6VU5bzXZWe6oWNLzg4zBiI0gDeLtql2WoAWuJGJwwx7da0lWmDj2poya3Qkl5PN62bcCOToA7qXdJVfUzfeP0ev82PNepuosUepSacAPBUWaS7iOMfB49lGyVW1Wvc8OfLQBBnm4XGbgAiG1WuSKdR2uWta0OAHRhvC9EtWQaLqorOHPAgESBF48SoNpyPRdiOBBIO+8Xq8c/BKWJM8ytbK7zL+UfvcS7xKBUBi/cvSa2SWjALHZzUOTrQD7TBO3E3H8IVIZtTonPEoqyghJG0VxXsge1sr/rEcY+SMxx3dEA9nmqVluOtw7kanbBs6QPJeLZ7WllxpcRxE+vkmhwPwu6h2hQadpBwJ7CO29EdXnEh243dU+a4WiZG49BnsPkml21xHEfyUY1G6wW+t1yIyrPsmejHqXHBuTnUCOr11pBuyei/tvQS4a2gndA7Ll01dpI6f4vBcALpatKePkV2doaeBjyTBVJwgjeI81wvGsEbx8sFxwfTi86Te0fJIVZwgj1r1oDHbDI2Y/wC4IdSqMCL9RHn59S44lGqBtad+HRMpr6h1xHxev5KI6pF7ucO7iPFDqWjRvm46jj1RJC46ia6oIvvG2b/l0KNVqGIkEi9rtf8APUR8lBrWwAwZgg3TdqkT4eSim2EwMSHRq2HqFwTJHUHtdaQYwc0ztuGvoI6lHY6QScQASDzbidZNwHjG1NcIDZk3vAMNMbgZExHFApPw0oubddBib73GANo3jDFNRxOMkuxEaYM6piCIOOEgyLt6T6gZpE80AOk4RDhB/VIg3YXKPWqhoJeQA2QZEaIkRF94iRr19GUyvlY1jotupgzGtxmZI2X4J4QchZSUS+yLl0VLXTZA5PSOIvcSYBjUASDG69eiGqvEGWrk3sePddPVPkvaHu2YTcuzx01QkJarscXIZcukpSs5QHWvGCi1GBSyVHe6F1hor8ovbTpuqPMBoJMeG/V0rya22p1V7qjsSZ4bhuAuWpz/AMrhzhZmG5pDqhGt0XN3wDPE7ljpXo+nx6Y2+5izTt0haSSZK6tFEDbCqUZlpO2FWMqIrKi8lxPf2ZbstSlMtV3tdd6omVdhRW1UtHOKLxlsI77kZtqB2ePQqEVyicugJoL5to+Env8AXWistDv2uHkqFtoIwN/rAo7LVtw3YHp2IiuJbtrgnZ0weoIrasXg9cA/iVWbQDv2fJPpvIvxOyb+g7ePWuEcSx5YON4g/wC7p3JpqRcYg9R471BfagQDPA4uHAeCjPtcyCdxGoHUeOtNQKJxtWiYBEbTJg6wTr2qvr2kS5kc1w1XGHA9g6lAqW0ubvEHD9YYXpFxlpNwIO2Lj7xGA5yZRDwOL9IN1GcRvBum6TcLinuJGDXA6ePOadZ+HxUdpc4ACZ0rhALSBpDmmD1KTOj8QOlfzbsDgDq3QmoDDAgG+b3PPCJ5wm4qLWtQY3SqG4ATdGkcWmNTou3ydqBlG3Mps0jtdAGsnWAcDB7Aspa7a6qb8BgNQui/aVXHict+xHJlUdu5MyllN1Y33MGDeGBMa0Bp1etaihyKw3+tS06aWxl1WxtrProhezZItHKUKTtrGdw8l4tXOpep5AqFtnptJvDe8zHas/qV7UWw/JmgeUpURtdOFZYqNAdxOoqny7lAUKT6l2kLmj4nmdEeJ3AqwNVYnOq0GrUDR7NOQN7j7Tu4DhvVsUNUhMktKMbXDiS5xkkySdZOJQHBWlejG5Q3sXopmFojaK4pPJriNi0XLXJzXbENu5cDvWIWFo9iw7XwiMqqMx6c1K4jKRMbVlPFRQWmB1pzaiXSNqJxrdqIyvGtV7X+vXQnhyGk6y2oVQdxOzEdakmuW3OvnCMD5Hj3KiflHk7wATNwXbRlAug4XC7ifIoqDJyauiztFpgg7ZB3ERhG3wUV1U6cjEtHTF1/UEJz9JoOvS75x60nVIIME3GR0gz3opC2FgQ/CRpTfeMTI1HvSiS0ggHnXiW/D8VxKEWjnuiMbxj7O7VPFcqE8zms165BF2OxNQCSY0YIHt64IN7sYvB7EO1ZQbSEu3loG0SLpM461Cr5RbSg+9JIAjfH3b1nq1cvOk439g4etarjxat3wZ8ubTsuQ1pquqO0n7AG7ANQQXe162LjXHoXSL1qMd2d1qRZqDnmG9J2IVlpl5AA4rTWGzhggDpUsk9JfFj1Hcm5HY0yRJ2laOk/qVbTcpNMrHJt8mpRS4LNldP5ZQGuGsJ9OSQ1okkwAp0EmhxIJvjD10LM5Qs952LdPsoYwM2YnaTiqPKGT9IEjzW3HHSjFOeqVmJtNAwqisFq61LRkEEdCzlsHOKqhZEKUkpSTCWTg/WnMqeiqZtYjWpNG2fEpyxM0w9SmWgvTgVDZam7etGbXbtHWouLNUZxfcO1yWl66UEVQdY61zlBtHWhpG1B9P11LnK3oAqDaOtMqVhfeEdArmMrVZdwRGOujUolN4nEdaOKg2hVcexnUr3LhlT7Mcek3paV7Z39sIDagDBeNRx6UGpXbdJF047/AOSjRfUTXPhz4O4kG4yALwoNtygKfNbeYI3X6yoVqyjNzduPSoA4q8MPdmXJ6jtEdUqEmSZXAUpuxTAVcyWSaZEJU2knRahMvMeKu7DQa0Yidd4U5y0lscdRKsFmDBvVhTKjMcPiHWj0XjaOtY5W9zdFUiWxSWFQ2PG0dYRGVhtCnQxM0leZtWW81SNRDe4nwWes0PcBIA1mRcFq7JaNFgDCBdHrUnxx3shmnSolWqqP5qvqHgj1rTdeofLCcR1rQZ6IVspSJid381ictWYB2BHR4rfViDhB6Vl84aYuJjWcehGL3C1sZXRG0JJ+k3d2eaSrZOjfJr0klRETjVKp4LiSnMviChIpJKXc0rg65DcuJJkJLgbST2pJJmSiHqYDoUa0YdXgkklgVmB1rqSSv2MR1ngmpJLjg1mxU2ngkkoZeTVg4ChPp4rqSgzSECcNfFJJKALZ9atrNh62rqSpDgz5fkFf66lF19SSScVHaaqcqeHiupLlyEo0kklUQ//Z';" />
+</div>
+ <!-- Hotel Name and Information -->
+            <div style="padding: 15px; flex-grow: 1;">
+                <h5 style="font-size: 20px; font-weight: bold; color: #333; margin: 0; text-align: center;">${hotel.hotel_name}</h5>
+                
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                    <tr>
+                        <th style="text-align: left; padding: 8px 0; font-weight: bold; color: #555;">Rating</th>
+                        <td style="padding: 8px 0; color: #777;">${hotel.hotel_customer_rating}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; padding: 8px 0; font-weight: bold; color: #555;">Price per Night</th>
+                        <td style="padding: 8px 0; color: #777;">₹${hotel.price_per_night}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: left; padding: 8px 0; font-weight: bold; color: #555;">Distance from Center</th>
+                        <td style="padding: 8px 0; color: #777;">${hotel.distance_from_centroid_in_km.toFixed(2)} km</td>
+                    </tr>
+                    <tr>
+                       
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    `;
+    // Update the hotel info div with the dynamically generated content
+    document.getElementById("hotelInfo").innerHTML = hotelInfoHtml;
+
+// Hide the loader after data is fetched
+document.getElementById('loader').style.display = 'none';
+
+// Show the recommended hotel card
+// document.getElementById('recommendedhotelCard').style.display = 'block';
+});
+
+          }
+
+
+ function fetchHotelData(place) {
+   const apiUrl = `https://jokerscript.xyz/api/travel/hotel_place.php?place=${place}`; // API URL with dynamic place
+    
+    // Show the loader while fetching data
+    document.getElementById('loader').style.display = 'block';
+    
+    // Hide the hotel info and recommended hotel card initially
+    document.getElementById("hotelInfo").innerHTML = '';
+    document.getElementById('recommendedhotelCard').style.display = 'none';
+
+    // Fetch data from the API
+    fetch(apiUrl)
+        .then(response => response.json()) // Parse the response as JSON
+        .then(data => {
+            console.log(data); // Output the response in the console
+
+            // Check if the response contains valid hotel data
+            if (data && data.body && Array.isArray(data.body) && data.body.length > 0) {
+                renderhoteldata = data.body;
+
+                renderhotel()
+                
+
+
+                
+            } else {
+                // Display message if no hotels found
+                document.getElementById("hotelInfo").innerHTML = 'No hotels found for this place.';
+                document.getElementById('loader').style.display = 'none';
+            }
+        })
+        .catch(error => {
+            // Handle any error that occurs during the fetch
+            console.error("Error fetching data:", error);
+            document.getElementById("hotelInfo").innerHTML = `Error: ${error.message}`;
+
+            // Hide the loader after error
+            document.getElementById('loader').style.display = 'none';
+        });
+}
+
+
+        
+  
+        // Function to fetch locations based on user input
+        function fetchLocations() {
+            const query = document.getElementById('placeName').value.trim();
+            if (query.length === 0) {
+                document.getElementById('result').innerHTML = ''; // Clear results if input is empty
+                return;
+            }
+
+            // URL of the API endpoint with dynamic query
+            //const url = `https://jokerscript.xyz/api/travel/auto.php?auto=${query}`;
+
+            // Make a GET request using fetch
+            fetch(url)
+                .then(response => response.json())  // Convert the response to JSON
+                .then(data => {
+                    // Get the div where the result will be displayed
+                    const resultDiv = document.getElementById('result');
+
+
+                    // Check if data is available and display it
+                    if (data && data.body && data.body.length > 0) {
+                        let output = ''; // Create a string to hold the results
+                        
+                        // Loop through the data and create result items
+                        data.body.forEach(item => {
+                            const primaryText = item.searchResultStruct.primaryText;
+                            const secondaryText = item.searchResultStruct.secondaryText;
+                            const regionType = item.searchResultStruct.regionTypeTag;
+
+                            output += `
+                                <div class="result-item" onclick="selectLocation('${primaryText}')">
+                                    <div>
+                                        <p><strong>${primaryText}</strong></p>
+                                        <p>${secondaryText}</p>
+                                    </div>
+                                    <p class="region-type">${regionType}</p>
+                                </div>
+                            `;
+                        });
+
+                        resultDiv.innerHTML = output; // Inject the result into the HTML
+                    } else {
+                        resultDiv.innerHTML = '<p>No locations found.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById('result').innerHTML = '<p>Failed to load data.</p>';
+                });
+        }
+
+        // Function to set the selected location into the input field
+        function selectLocation(location) {
+            // Remove everything after the comma (if exists) and set only the part before the comma
+            const cleanLocation = location.split(',')[0].trim(); // Get the text before the comma
+            document.getElementById('placeName').value = cleanLocation; // Set cleaned location in input field
+            document.getElementById('result').innerHTML = ''; // Clear the result container
+        }
+    </script>

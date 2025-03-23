@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .search-box {
+
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .search-box input {
+		box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+            width: 75%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid blue;
+            border-radius: 5px;
+        }
+
+        .search-box button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background-color: #0056b3;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+       
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .col-md-4 {
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .shbtn {
+            width: 25%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .username {
+            font-size: 18px;
+
+        }
+
+        .header .logout-btn {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header .logout-btn:hover {
+            background-color: #c82333;
+        }
+
+        .header .package {
+            background-color: #fca400;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+
+        footer {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1;
+        }
+
+        #map {
+            height: 250px;
+            width: 100%;
+            margin-top: 0px;
+            display: none;
+            z-index: 0;
+            position: relative;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-btn {
+            position: fixed;
+            bottom: 70px;
+            right: 5px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .chatbox {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            width: 300px;
+            max-height: 80%;
+            height: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+            padding: 10px;
+            overflow-y: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chatbox-header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .chatbox-body {
+            overflow-y: auto;
+            height: 80%;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .chatbox-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .chatbox-footer input {
+            width: 80%;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .chatbox-footer button {
+            width: 15%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chatbox-footer button:hover {
+            background-color: #0056b3;
+        }
+		
+		.loader {
+    position: absolute;
+    margin-top: 5px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    color: #333;
+}
+
+.loader::after {
+    content: '...';
+    animation: ellipsis 1s infinite;
+}
+
+@keyframes ellipsis {
+    0% {
+        content: '...';
+    }
+    33% {
+        content: '..';
+    }
+    66% {
+        content: '.';
+    }
+    100% {
+        content: '...';
+    }
+}
+/* General container for the itinerary */
+#itinerary-container {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+}
+
+/* Loader styles */
+.loader {
+    text-align: center;
+    font-size: 24px;
+    color: #007bff;
+    font-weight: bold;
+    margin: 50px 0;
+}
+
+/* Style for each attraction */
+.attraction {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Image container for attraction */
+.image-container {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.image-container img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Attraction header */
+.attraction-header h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Table styling for each attraction's details */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    width: 180px;
+    font-weight: bold;
+    color: #555;
+}
+
+td {
+    color: #444;
+}
+
+/* Cost style */
+.cost {
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* Rating style */
+.rating {
+    color: #ffd700;
+}
+
+/* Kilometer calculation */
+.km {
+    font-weight: bold;
+    color: #17a2b8;
+}
+
+/* Responsive design: Adjust layout for smaller screens */
+@media (max-width: 768px) {
+    .attraction {
+        padding: 15px;
+    }
+
+    .attraction-header h2 {
+        font-size: 20px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    .image-container img {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .attraction-header h2 {
+        font-size: 18px;
+    }
+
+    table {
+        font-size: 10px;
+    }
+
+    .loader {
+        font-size: 20px;
+    }
+}
+
+
+
+
+#hotelInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Loader */
+#loader {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 20px auto;
+    color: #007BFF;
+}
+
+/* Hotel Card Styling */
+.hotel-card {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 280px;
+    text-align: center;
+ 
+}
+
+
+
+.hotel-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.hotel-card h2 {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    color: #333;
+}
+
+.hotel-card p {
+    font-size: 0.9rem;
+    margin: 8px 0;
+    color: #555;
+}
+
+.hotel-card a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.hotel-card a:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+    #hotelInfo {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hotel-card {
+        width: 100%;
+        max-width: 350px;
+    }
+}
+
+/* Recommended Hotels Section */
+#recommendedhotelCard {
+    text-align: center;
+    display: none; /* Initially hidden */
+}
+
+#recommendedhotelCard h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+.result-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+			max-height:200px;
+			overflow-y:auto;
+			width:75%;
+			box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .result-item p {
+            margin: 0;
+        }
+
+        .region-type {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+           /* Card Styling */
+           .detail-card {
+            width: 300px; /* Medium-sized card */
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+/* Floating cloud icon */
+#cloud-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 20px;
+    background-color: white;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+#chat-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+	z-index:200;
+}
+
+#chat-header {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px 10px 0 0;
+}
+
+#chat-content {
+    flex: 1;
+    padding: 10px;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#chat-content p {
+    margin: 0;
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 75%;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+/* User (request) styles */
+#chat-content p.user {
+    background-color: #bee5eb;
+    color: #0c5460;
+    align-self: flex-end;
+    text-align: right;
+}
+
+/* System response styles */
+#chat-content p.response {
+    background-color: #d1ecf1;
+    color: #0056b3;
+    align-self: flex-start;
+    text-align: left;
+}
+
+/* Chat input */
+#chat-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+}
+
+#chat-input input {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#chat-input button {
+    padding: 5px 10px;
+    margin-left: 5px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#chat-input button:hover {
+    background-color: #0056b3;
+}
+
+
+ h2 {
+            text-align: center;
+            color: white;
+        }
+		
+ h1 {
+            text-align: center;
+            color: #2e3b4e;
+        }
+        .tourism-place {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .place {
+            margin: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+        }
+        .place img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .place h3 {
+            color: #2e3b4e;
+            margin-top: 10px;
+        }
+        .place p {
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<div class="header">
+    <div class="username">
+        Welcome, User! {{name}}
+    </div>
+    <h2 class="text-cehealthter">Welcome to Tourism Explorex</h2>
+    <div>
+        <a href="#" class="package" data-bs-toggle="modal" data-bs-target="#registerModal">Packages</a>
+         <a href="/chat">
+        <button style="
+            background-image: url('https://cdn-icons-png.flaticon.com/128/1533/1533105.png');
+            background-size: cover; 
+            background-position: center; 
+            width: 50px; 
+            height: 50px; 
+            border: none; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            padding: 0;
+            position: fixed;
+            top: 75px;
+            right: 10px;
+        "></button>
+    </a>
+        <a href="javascript:history.back()" class="logout-btn">Back</a>
+    </div>
+</div><br>
+
+    <div class="container">
+        <h1>Route Prediction Details</h1>
+        <div class="details">
+            <p><strong>From Place:</strong> {{ from_place }}</p>
+            <p><strong>To Place:</strong> {{ to_place }}</p>
+            <p><strong>No. of Persons:</strong> {{ no_of_person }}</p>
+            <p><strong>Vehicle Type:</strong> {{ vehicle_type }}</p>
+            <p><strong>From Date:</strong> {{ from_date }}</p>
+            <p><strong>To Date:</strong> {{ to_date }}</p>
+        </div>
+
+        <div class="cost">
+            <p><strong>Predicted Cost:</strong> {{ cost }}</p>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+

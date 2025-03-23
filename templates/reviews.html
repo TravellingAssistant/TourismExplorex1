@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews for {{ attraction_name }}</title>
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            color: #444;
+        }
+
+        /* Main Container Styling */
+        main {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* Review Card Styling */
+        .review {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .review:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Content in Review */
+        .review p {
+            margin: 10px 0;
+            line-height: 1.7;
+        }
+
+        .review strong {
+            color: #222;
+            font-weight: bold;
+        }
+
+        .rating {
+            font-size: 1.2rem;
+            color: #FFD700;
+        }
+
+        /* No Reviews Message */
+        .no-reviews {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Links */
+        a {
+            color: #1e90ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+		.header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .username {
+            font-size: 18px;
+
+        }
+
+        .header .logout-btn {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+
+	<div class="header">
+    <h2 class="text-cehealthter">Reviews for {{ attraction_name }}</h2>
+    <div>
+      
+        <a href="javascript:history.back()" class="logout-btn">Back</a>
+    </div>
+</div>
+</header>
+
+<main>
+    {% if reviews %}
+        {% for review in reviews %}
+        <div class="review">
+            <p><strong>User:</strong> {{ review.user_name }}</p>
+            <p><strong>Feedback:</strong> {{ review.feedback }}</p>
+            <p class="rating"><strong>Rating:</strong> ⭐ {{ review.rating }}/5</p>
+            <p><strong>Date:</strong> {{ review.timestamp }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-reviews">
+            <p>No reviews found for <strong>{{ attraction_name }}</strong>.</p>
+            <p><a href="javascript:history.back()" class="logout-btn">Back</a></p>
+        </div>
+    {% endif %}
+</main>
+
+</body>
+</html>

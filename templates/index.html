@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Web App</title>
+    <!-- Include CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Add Bootstrap CSS for Modal and Layout -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <!-- Logo on the left -->
+        <a class="navbar-brand" href="#">
+            <!-- Use url_for to correctly reference the static image -->
+            <img src="{{ url_for('static', filename='img/logo.jpeg') }}" alt="Logo" style="height: 50px;">
+        </a>
+
+        <h1>Tourism Explorex</h1>
+        <!-- Register and Login Buttons -->
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+        </div>
+    </div>
+</nav>
+
+
+
+<!-- Modal for Login Form -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Login Form -->
+                <form action="/login" method="POST">  <!-- Added action to POST data to the /login route -->
+                    <div class="mb-3">
+                        <label for="loginEmail" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="loginEmail" name="email" placeholder="Enter email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <hr>
+                <!-- Login with Google Button -->
+                <a href="/login_with_google" class="btn btn-danger w-100">Login with Google</a>  <!-- Replace href with the correct Google OAuth route -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Register Form -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Register Form -->
+                <form action="/register" method="POST">  <!-- This sends POST request to the /register route -->
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="first_name" placeholder="Enter First Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Enter Last Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerEmail" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="registerEmail" name="email" placeholder="Enter email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="registerPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="registerPassword" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <hr>
+                <!-- Register with Google Button -->
+                <a href="/login_with_google" class="btn btn-danger w-100">Register with Google</a>  <!-- Replace href with the correct Google OAuth route -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="banner">
+    <div class="glass-container">
+        <!-- Change form action to call the register route -->
+        
+            <input type="text" name="query" class="search-input" style=" width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;" placeholder="Search for destinations..." required>
+            <button type="submit" class="search-button" data-bs-toggle="modal" data-bs-target="#registerModal">⌕</button>
+        
+    </div>
+</div>
+
+
+
+<!-- Toast Container -->
+<div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+</div>
+
+<!-- Display flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <ul class="alert alert-info">
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endwith %}
+
+<div id="flash-messages" style="display: none;">
+    {{ get_flashed_messages(with_categories=true)|tojson }}
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+<!-- Toast JS -->
+<script>
+    // Show toast based on flash messages from Flask
+    window.onload = function() {
+        // Get the flash messages from the hidden div
+        const messages = JSON.parse(document.getElementById('flash-messages').textContent);
+
+        // Function to create a toast
+        function showToast(message, type) {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.classList.add('toast', 'fade', 'show', 'align-items-center');
+
+            // Define different colors based on message type (success or error)
+            if (type === 'success') {
+                toast.classList.add('bg-success');
+            } else if (type === 'error') {
+                toast.classList.add('bg-danger');
+            }
+
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            // Automatically dismiss the toast after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.classList.add('hide');
+            }, 5000);
+        }
+
+        // Loop through each flashed message and show the toast
+        if (messages && messages.length > 0) {
+            messages.forEach(message => {
+                const [category, text] = message; // category: success, error, etc.
+                showToast(text, category);
+            });
+        }
+    };
+</script>
+
+
+
+
+    
+
+    <script>
+        
+
+    // Fetch itinerary data for the place from the external API (for specific places)
+    fetch(`https://jokerscript.xyz/api/travel/famus_place.php?place=${userMessage}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.body && data.body.itinerary) {
+                console.log(data);  // Log the entire data response to verify its structure
+
+                const destination_name = data.body.itinerary.destination_name || "Unknown";
+                const state = data.body.itinerary.State || "Unknown";
+                
+                // Extract node_name, node_tags, and avg_rating from the itinerary
+                const daywiseDetails = data.body.itinerary.subregions[0]?.daywise_details[0]?.itinerary_for_day || [];
+
+                // Optionally, you could store or use the itinerary data here.
+                daywiseDetails.forEach(item => {
+                    const node_name = item.node_name || "Unknown";
+                    const node_tags = item.node_tags ? item.node_tags.join(", ") : "No Tags"; // Convert array to string
+                    const avg_rating = item.avg_rating || "N/A";
+
+                    // Send the extracted data to Flask to update the CSV
+                    fetch('/update-csv', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ destination_name, state, node_name, node_tags, avg_rating })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('CSV updated:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error updating CSV:', error);
+                    });
+                });
+
+
+//delay(5000);
+                // After the itinerary data has been processed, send the user's message to the Flask backend for chatbot
+                fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: userMessage })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const botResponse = data.response || 'Sorry, I didn\'t understand that.';
+
+                    // Delay the bot's response by 2 seconds
+                    setTimeout(() => {
+                        // Remove typing indicator
+                        typingIndicator.remove();
+
+                        // Add bot response after delay
+                        addMessageToChat(botResponse, 'bot');
+                    }, 2000); // 2000 milliseconds = 2 seconds
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    setTimeout(() => {
+                        typingIndicator.remove();
+                        addMessageToChat('Something went wrong, please try again later.', 'bot');
+                    }, 2000);
+                });
+
+            } else {
+                console.error('Invalid data structure', data);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching place data:', error);
+
+            // Handle the case when the fetch request fails
+            setTimeout(() => {
+                typingIndicator.remove();
+                addMessageToChat('Error fetching travel information. Please try again later.', 'bot');
+            }, 2000);
+        });
+
+    // Clear input field after sending
+    document.getElementById('user-input').value = '';
+
+
+Delay(5000);
+// Add message to the chat box
+function addMessageToChat(message, sender) {
+    const chatBox = document.getElementById('chat-box');
+    const messageElement = document.createElement('div');
+    messageElement.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+    messageElement.innerText = message;
+    chatBox.appendChild(messageElement);
+
+    // Auto scroll to the latest message
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+    </script>
+
+    <!-- Optional Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

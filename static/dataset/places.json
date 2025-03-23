@@ -1,0 +1,76 @@
+[
+  {
+    "avg_rating":5,
+    "distance_to_next_node_in_metres": null,
+    "mode_of_transport_to_next_node": "car",
+    "no_of_ratings": 785,
+    "node_arrival_time": "4:00",
+    "node_average_cost": "Free",
+    "node_coordinates_deg": {
+      "lat": 16.51928,
+      "long": 80.63049
+    },
+    "node_departure_time": "20:00",
+    "node_id": "ChIJo_q39wbFADsR1KE98bUprfYik",
+    "destination_place":"vijayawada",
+    "node_name": "Sri Ramalingeswara Swamy Temple",
+    "node_sequence_id": 20,
+    "node_tags": [
+      "temple"
+    ],
+    "node_type": "attraction",
+    "primary_image_url": "https://media-cdn.tripadvisor.com/media/photo-s/07/50/08/df/sri-ramalingeswara-swami.jpg",
+    "time_to_next_node_in_minutes": null
+  },
+  {
+    "avg_rating":5,
+    "distance_to_next_node_in_metres": null,
+    "mode_of_transport_to_next_node": "car",
+    "no_of_ratings": 785,
+    "node_arrival_time": "4:00",
+    "node_average_cost": "Free",
+    "node_coordinates_deg": {
+      "lat": 16.51928,
+      "long": 80.63049
+    },
+    "node_departure_time": "20:00",
+    "node_id": "ChIJo_q39wbFADsR1KE98bUpYdik",
+    "destination_place":"vijayawada",
+    "node_name": "Subramanya Swamy Temple",
+    "node_sequence_id": 20,
+    "node_tags": [
+      "temple",
+      "festival"
+    ],
+    "node_type": "attraction",
+    "primary_image_url": "https://content3.jdmagicbox.com/comp/vijayawada/t4/0866px866.x866.171226083114.t6t4/catalogue/sri-subramanya-swamy-temple-islampet-vijayawada-temples-ga6bm2f2cr.jpg",
+    "time_to_next_node_in_minutes": null
+  },
+    {
+      "avg_rating":5,
+      "distance_to_next_node_in_metres": null,
+      "mode_of_transport_to_next_node": "car",
+      "no_of_ratings": 785,
+      "node_arrival_time": "4:00",
+      "node_average_cost": "Free",
+      "node_coordinates_deg": {
+        "lat": 16.53435516357422,
+        "long": 80.61410522460938
+      },
+      "node_departure_time": "20:00",
+      "node_id": "ChIJo_q39wbFADsR1KE98bUpYigk",
+      "destination_place":"vijayawada",
+      "node_name": "Kanaka Durga Temple",
+      "node_sequence_id": 19,
+      "node_tags": [
+        "temple",
+        "pond",
+        "festival"
+      ],
+      "node_type": "attraction",
+      "primary_image_url": "https://kanakadurgamma.org/static/media/IMG-20220413-WA0018@2x.7f356c08.png",
+      "time_to_next_node_in_minutes": null
+    }
+    
+  ]
+  

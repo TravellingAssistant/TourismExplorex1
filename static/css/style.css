@@ -1,0 +1,499 @@
+/* static/css/styles.css */
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar Styling */
+.navbar {
+    padding: 10px;
+}
+
+/* Logo styling */
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Cover Image */
+.cover-image img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Modal Custom Styling */
+.modal-content {
+    padding: 20px;
+}
+
+/* Add some spacing to the modal form inputs */
+.modal-body .form-control {
+    margin-bottom: 15px;
+}
+
+.banner {
+    background-image: url("/static/img/bg.jpg");
+    height: 650px; 
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* Text color */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Optional text shadow */
+    font-size: 3rem; /* Adjust font size */
+    text-align: center;
+}/* Glassmorphism container */
+.glass-container {
+    height: 250px;
+    width: 50%;
+    background-color: rgba(255, 255, 255, 0.1); /* Slightly increased opacity for better glass effect */
+    backdrop-filter: blur(10px); /* Enhanced blur effect */
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 8px;
+    box-shadow: 20px 20px 22px rgba(0, 0, 0, 0.2);
+    font-family: 'Poppins', sans-serif;
+    display: flex; /* Flexbox for centering */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+}
+
+/* Search container */
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.6); /* Slightly opaque background for input */
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 12px 24px;
+    max-width: 500px;
+    width: 100%;
+}
+
+/* Search input */
+.search-input {
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 0px;
+    width: 100%;
+    outline: none;
+    box-sizing: border-box;
+}
+
+
+/* Search button */
+.search-button {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    height:45px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Hover effect for the search button */
+.search-button:hover {
+    background-color: #45a049;
+}
+
+/* Search icon */
+.search-button i {
+    font-size: 18px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+    .search-container {
+        width: 90%;
+    }
+
+    .search-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+
+
+.chat-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+#chat-box {
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.user-message {
+    text-align: right;
+    background-color: #d1f7d1;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+.bot-message {
+    text-align: left;
+    background-color: #e1e1e1;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+/*input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}*/
+
+button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+   /* Card Styling */
+   .detail-card {
+    width: 300px; /* Medium-sized card */
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Card Hover Effect */
+.detail-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Image Section (150x150 Image) */
+.card-image {
+    width: 150px; /* Fixed size for image */
+    height: 150px; /* Fixed height */
+    object-fit: cover; /* Ensures image fits within the box without distortion */
+    border-radius: 5%; /* Makes the image circular */
+    margin: 20px auto; /* Center the image */
+    display: block;
+}
+
+/* Card Content Section */
+.card-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.card-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-footer span {
+    font-size: 14px;
+    color: #888;
+}
+
+.card-footer button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.card-footer button:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+ /* Floating chat button */
+ .open-chat-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #1D4ED8;
+    color: white;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.open-chat-btn:hover {
+    background-color: #2563EB;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px);
+}
+
+/* Chat container */
+.chat-container {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 30px;
+    width: 400px;
+    max-width: 100%;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow: hidden;
+    transform: translateY(100%);
+    transition: transform 0.5s ease;
+}
+
+.chat-container.open {
+    display: block;
+    transform: translateY(0);
+}
+
+/* Header of the chat */
+.chat-header {
+    background-color: #1D4ED8;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header h3 {
+    margin: 0;
+}
+
+.close-chat-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.close-chat-btn:hover {
+    transform: rotate(90deg);
+}
+
+/* Chatbox styling */
+.chat-box {
+    padding: 20px;
+    height: 350px;
+    overflow-y: auto;
+    background-color: #fafafa;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-message, .bot-message {
+    padding: 12px;
+    border-radius: 15px;
+    margin: 10px 0;
+    font-size: 15px; /* Default font size for messages */
+    max-width: 80%;
+}
+
+.user-message {
+    background-color: #0072dd;
+    color: white;
+    text-align: right;
+    align-self: flex-end;
+}
+
+.bot-message {
+    background-color: #f1f1f1;
+    color: #333;
+    text-align: left;
+    align-self: flex-start;
+}
+
+/* Message input and send button */
+.input-box-container {
+    padding: 15px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #ddd;
+}
+
+.input-box {
+    width: calc(100% - 60px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    font-size: 14px; /* Default font size for input */
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.input-box:focus {
+    border-color: #1D4ED8;
+}
+
+.send-btn {
+    padding: 10px 15px;
+    border-radius: 30px;
+    background-color: #1D4ED8;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px; /* Default font size for button */
+    transition: background-color 0.3s ease;
+}
+
+.send-btn:hover {
+    background-color: #2563EB;
+}
+
+/* Chat responsiveness */
+@media (max-width: 768px) {
+    .chat-container {
+        width: 100%;
+        bottom: 10px;
+        right: 10px;
+        border-radius: 10px;
+    }
+}
+
+/* Typing animation */
+.typing-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #1D4ED8;
+    margin: 5px;
+    animation: typing 1s infinite;
+}
+
+@keyframes typing {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+.typing-indicator:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.typing-indicator:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+
+#weather-widget {
+    position: relative;
+}
+
+#cloud-icon {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 40px;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+#cloud-icon:hover {
+    transform: scale(1.1);
+}
+
+#search-box1 {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    border-radius: 5px;
+}
+
+#search-box1 input {
+    padding: 5px;
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+#search-box1 button {
+    padding: 5px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#search-box1 button:hover {
+    background-color: #0056b3;
+}
+
+#weather-info {
+    margin-top: 20px;
+    font-size: 16px;
+    text-align: center;
+}

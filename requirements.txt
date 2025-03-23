@@ -12,6 +12,7 @@ google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.1
 google-cloud==0.34.0
 googleapis-common-protos==1.66.0
+gunicorn
 httplib2==0.22.0
 idna==3.10
 itsdangerous==2.2.0
